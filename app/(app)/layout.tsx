@@ -7,7 +7,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className="flex min-h-screen">
         <AppMainSidebar />
-        <main className="flex-1 transition-all duration-300 p-6 md:p-8">
+        <main className="flex-1 transition-all duration-300 py-10 px-4 md:p-8 min-w-0 overflow-x-hidden">
           {children}
         </main>
       </div>

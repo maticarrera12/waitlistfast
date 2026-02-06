@@ -48,7 +48,15 @@ export default async function ReferralCampaignSettingsPage({ params }: PageProps
 
   // Get campaign first
   const campaignResult = await getReferralCampaign(waitlist.id)
-  const campaign = campaignResult.success ? campaignResult.campaign : null
+  const campaign = campaignResult.success && campaignResult.campaign 
+    ? {
+        id: campaignResult.campaign.id,
+        name: campaignResult.campaign.name,
+        status: campaignResult.campaign.status as 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ENDED',
+        settings: campaignResult.campaign.settings,
+        waitlistId: campaignResult.campaign.waitlistId,
+      }
+    : null
 
   // Get rules and rewards only if campaign exists
   const [rulesResult, rewardsResult] = await Promise.all([
@@ -56,8 +64,8 @@ export default async function ReferralCampaignSettingsPage({ params }: PageProps
     campaign ? getRewards(campaign.id) : Promise.resolve({ success: true, rewards: [] }),
   ])
 
-  const rules = rulesResult.success ? rulesResult.rules : []
-  const rewards = rewardsResult.success ? rewardsResult.rewards : []
+  const rules = (rulesResult.success && rulesResult.rules) ? rulesResult.rules : []
+  const rewards = (rewardsResult.success && rewardsResult.rewards) ? rewardsResult.rewards : []
 
   // Get leaderboard preview (top 10)
   const leaderboard = campaign?.status === 'ACTIVE'

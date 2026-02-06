@@ -87,24 +87,24 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
   const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/w/${waitlist.slug}`
 
   return (
-    <div className="space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="space-y-8 p-2 md:p-8 max-w-7xl mx-auto w-full min-w-0">
       {/* HEADER DE LA PAGINA */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row justify-between gap-4">
         <div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">{waitlist.name}</h1>
             <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-zinc-800 flex items-center gap-1 text-sm font-medium">
                 {publicUrl} <HugeiconsIcon icon={Link01Icon} className="w-3 h-3" />
             </a>
         </div>
-        <div className="flex gap-3">
-            <Button variant="outline" asChild>
+        <div className="flex gap-3 w-full md:w-auto">
+            <Button variant="outline" asChild className="flex-1 md:flex-initial">
                 <Link href={`/dashboard/waitlists/${slug}/settings/referral`}>
                     Settings
                 </Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="flex-1 md:flex-initial">
                 <a href={publicUrl} target="_blank" rel="noopener noreferrer">
-                    Open Public Page <HugeiconsIcon icon={ArrowRight01Icon} className="ml-2 w-4 h-4" />
+                    Open <HugeiconsIcon icon={ArrowRight01Icon} className="ml-2 w-4 h-4" />
                 </a>
             </Button>
         </div>
@@ -118,8 +118,8 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
             <HugeiconsIcon icon={Users} className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalSubscribers}</div>
-            <p className="text-xs text-muted-foreground">+0 from last hour</p>
+            <div className="text-5xl text-secondary font-bold">{totalSubscribers}</div>
+            <p className="text-xl text-secondary">+0 from last hour</p>
           </CardContent>
         </Card>
 
@@ -129,8 +129,8 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
             <HugeiconsIcon icon={Share06Icon} className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{referralRate}%</div>
-            <p className="text-xs text-muted-foreground">Users who referred friends</p>
+            <div className="text-5xl text-secondary font-bold">{referralRate}%</div>
+            <p className="text-xl text-secondary">Users who referred friends</p>
           </CardContent>
         </Card>
 
@@ -140,56 +140,58 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
             <HugeiconsIcon icon={Award01Icon} className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Top 5%</div>
-            <p className="text-xs text-muted-foreground">Compared to other projects</p>
+            <div className="text-5xl text-secondary font-bold">Top 5%</div>
+            <p className="text-xl text-secondary">Compared to other projects</p>
           </CardContent>
         </Card>
       </div>
 
       {/* DATA TABLE */}
-      <Card>
+      <Card className="w-full min-w-0">
         <CardHeader>
             <CardTitle>Leaderboard & Subscribers</CardTitle>
         </CardHeader>
-        <CardContent>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[100px]">Position</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Referrals</TableHead>
-                        <TableHead>Score</TableHead>
-                        <TableHead className="text-right">Signed Up</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {waitlist.subscribers.length === 0 ? (
-                         <TableRow>
-                            <TableCell colSpan={5} className="text-center py-8 text-zinc-500">
-                                No signups yet. Share your link to get started!
-                            </TableCell>
-                         </TableRow>
-                    ) : (
-                        waitlist.subscribers.map((sub, index) => (
-                            <TableRow key={sub.id}>
-                                <TableCell className="font-medium">#{index + 1}</TableCell>
-                                <TableCell>{sub.email}</TableCell>
-                                <TableCell>
-                                    {sub._count.referrals > 0 && (
-                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                            {sub._count.referrals} friends
-                                        </span>
-                                    )}
+        <CardContent className="p-0 min-w-0">
+            <div className="overflow-x-auto min-w-0">
+                <Table className="min-w-[600px]">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-[100px]">Position</TableHead>
+                            <TableHead className="min-w-[200px]">Email</TableHead>
+                            <TableHead className="min-w-[120px]">Referrals</TableHead>
+                            <TableHead className="min-w-[80px]">Score</TableHead>
+                            <TableHead className="text-right min-w-[120px]">Signed Up</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {waitlist.subscribers.length === 0 ? (
+                             <TableRow>
+                                <TableCell colSpan={5} className="text-center py-8 text-zinc-500">
+                                    No signups yet. Share your link to get started!
                                 </TableCell>
-                                <TableCell>{sub.score}</TableCell>
-                                <TableCell className="text-right text-muted-foreground text-sm">
-                                    {new Date(sub.createdAt).toLocaleDateString()}
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                             </TableRow>
+                        ) : (
+                            waitlist.subscribers.map((sub, index) => (
+                                <TableRow key={sub.id}>
+                                    <TableCell className="font-medium">#{index + 1}</TableCell>
+                                    <TableCell className="truncate max-w-[200px]">{sub.email}</TableCell>
+                                    <TableCell>
+                                        {sub._count.referrals > 0 && (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                                {sub._count.referrals} friends
+                                            </span>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>{sub.score}</TableCell>
+                                    <TableCell className="text-right text-muted-foreground text-sm">
+                                        {new Date(sub.createdAt).toLocaleDateString()}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
         </CardContent>
       </Card>
     </div>

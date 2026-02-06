@@ -1,7 +1,14 @@
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import React from 'react'
 
-const Hero = () => {
+interface HeroProps {
+  isAuthenticated: boolean
+}
+
+const Hero = ({ isAuthenticated }: HeroProps) => {
+  const buildListHref = isAuthenticated ? '/dashboard' : '/signin'
+
   return (
     <div className='bg-background min-h-screen flex items-center justify-center'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8'>
@@ -16,7 +23,9 @@ const Hero = () => {
                 </div>
             </div>
             <div className='flex gap-4'>
-                <Button className='bg-primary text-primary-foreground hover:bg-primary/80 rounded-full p-6 font-bold font-space-mono'>BUILD YOUR LIST</Button>
+                <Button asChild className='bg-primary text-primary-foreground hover:bg-primary/80 rounded-full p-6 font-bold font-space-mono'>
+                    <Link href={buildListHref}>BUILD YOUR LIST</Link>
+                </Button>
                 <Button className='bg-background border border-gray-700 text-foreground hover:bg-secondary/80 rounded-full p-6 font-bold font-space-mono'>VIEW DEMO</Button>
             </div>
         </div>

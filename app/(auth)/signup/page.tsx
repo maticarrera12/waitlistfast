@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { AuthShell } from "../_components/auth-shell";
@@ -27,6 +27,7 @@ import { signUp } from "@/actions/auth-actions";
 
 export default function SignUpPage() {
   const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -51,18 +52,28 @@ export default function SignUpPage() {
         setError("An error occurred");
       } else {
         queryClient.invalidateQueries({ queryKey: ["session"] });
-        router.push("/dashboard");
+        startTransition(() => {
+          router.push("/dashboard");
+        });
       }
     } catch (err) {
       setError(`An error occurred: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
   };
 
+  const navigateToDashboard = useCallback(() => {
+    startTransition(() => {
+      router.push("/dashboard");
+    });
+  }, [router, startTransition]);
+
   useEffect(() => {
     authClient.getSession().then((session) => {
-      if (session.data != null) router.push("/dashboard");
+      if (session.data != null) {
+        navigateToDashboard();
+      }
     });
-  }, [router]);
+  }, [navigateToDashboard]);
 
   return (
     <AuthShell

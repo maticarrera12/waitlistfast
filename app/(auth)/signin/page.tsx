@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,6 +31,7 @@ import { signIn } from "@/actions/auth-actions";
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -54,7 +55,9 @@ export default function SignInPage() {
       if (result && result.user) {
         queryClient.invalidateQueries({ queryKey: ["session"] });
         toast.success("You have been signed in");
-        router.push(searchParams.get("callbackUrl") || "/dashboard");
+        startTransition(() => {
+          router.push(searchParams.get("callbackUrl") || "/dashboard");
+        });
       } else {
         setError("An error occurred");
         toast.error("An error occurred");
@@ -66,11 +69,19 @@ export default function SignInPage() {
     }
   };
 
+  const navigateToDashboard = useCallback(() => {
+    startTransition(() => {
+      router.push("/dashboard");
+    });
+  }, [router, startTransition]);
+
   useEffect(() => {
     authClient.getSession().then((session) => {
-      if (session.data != null) router.push("/dashboard");
+      if (session.data != null) {
+        navigateToDashboard();
+      }
     });
-  }, [router]);
+  }, [navigateToDashboard]);
 
   return (
     <AuthShell

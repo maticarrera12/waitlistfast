@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useTransition } from "react";
 import { toast } from "sonner";
 
 import PasswordInput from "@/app/(auth)/_components/password-input";
@@ -18,6 +19,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const token = searchParams.get("token");
   const error = searchParams.get("error");
 
@@ -45,7 +47,9 @@ export default function ResetPasswordPage() {
         onSuccess: () => {
           toast.success("Password reset successfully");
           setTimeout(() => {
-            router.push("/signin");
+            startTransition(() => {
+              router.push("/signin");
+            });
           }, 1000);
         },
       }

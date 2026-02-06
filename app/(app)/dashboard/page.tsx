@@ -98,15 +98,15 @@ export default async function DashboardPage() {
       {/* Header */}
       <header className='flex justify-between items-center'>
         <div className='flex flex-col gap-2'>
-          <h1 className='text-6xl font-bold font-space-mono'>DASHBOARD</h1>
-          <p className='text-md text-muted-foreground'>Welcome back. Your Waitlists are heating up.</p>
+          <h1 className='text-2xl ml-12 md:ml-0 md:text-[clamp(60px,13vw,80px)]  font-bold font-space-mono'>DASHBOARD</h1>
+          <p className='text-sm md:text-md text-muted-foreground'>Welcome back. Your Waitlists are heating up.</p>
         </div>
         <div className='flex items-center justify-center gap-4'>
           <CreateWaitlistModal 
             trigger={
-              <button className='bg-primary text-background hover:bg-primary/80 rounded-full cursor-pointer px-6 py-8 font-bold text-xl flex items-center gap-2 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all'>
+              <button className='bg-primary  text-background hover:bg-primary/80 rounded-full cursor-pointer p-2 md:px-6 md:py-8 font-bold text-xs md:text-xl flex items-center gap-2 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all'>
                 NEW WAITLIST
-                <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} className="size-6 font-bold text-primary bg-background rounded-full" />
+                <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} className="size-6 p-1 font-bold text-primary bg-background rounded-full" />
               </button>
             }
           />
@@ -123,8 +123,8 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-baseline gap-3">
-              <div className="text-5xl font-bold text-primary">{totalSignups.toLocaleString()}</div>
-              <div className="text-sm font-semibold text-green-500">{signupsGrowth}</div>
+              <div className="text-5xl font-bold text-secondary">{totalSignups.toLocaleString()}</div>
+              <div className="text-sm font-semibold text-secondary">{signupsGrowth}</div>
             </div>
           </CardContent>
         </Card>
@@ -137,8 +137,8 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-baseline gap-3">
-              <div className="text-5xl font-bold text-primary">{avgConversionRate}%</div>
-              <div className="text-sm font-semibold text-green-500">{conversionGrowth}</div>
+              <div className="text-5xl font-bold text-secondary">{avgConversionRate}%</div>
+              <div className="text-sm font-semibold text-secondary">{conversionGrowth}</div>
             </div>
           </CardContent>
         </Card>
@@ -186,18 +186,18 @@ export default async function DashboardPage() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-4">
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wider">Leads</p>
-                          <p className="text-2xl font-bold text-primary">{waitlist._count.subscribers.toLocaleString()}</p>
+                          <p className="text-md text-muted-foreground uppercase tracking-wider">LEADS</p>
+                          <p className="text-2xl font-bold text-white">{waitlist._count.subscribers.toLocaleString()}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wider">Wait Time</p>
-                          <p className="text-2xl font-bold text-secondary">{waitTime}</p>
+                          <p className="text-md text-muted-foreground uppercase tracking-wider">WAIT TIME</p>
+                          <p className="text-2xl font-bold text-white">{waitTime}</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <Button asChild className="flex-1 bg-primary text-background hover:bg-primary/80">
+                    <div className="flex items-center gap-2 md:gap-8">
+                      <Button asChild className="flex-1 py-8 rounded-full bg-primary text-background hover:bg-primary/80 font-bold text-xl">
                         <Link href={`/dashboard/waitlists/${waitlist.slug}`}>
                           Manage Campaign
                         </Link>
@@ -206,14 +206,15 @@ export default async function DashboardPage() {
                         variant="outline" 
                         size="icon"
                         asChild
+                        className='bg-card border border-muted-foreground text-muted-foreground hover:bg-card/80 rounded-full p-8'
                       >
                         <a 
                           href={publicUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center text-muted-foreground rounded-full p-8"
                         >
-                          <HugeiconsIcon icon={Share06Icon} strokeWidth={2} className="w-4 h-4" />
+                          <HugeiconsIcon icon={Share06Icon} size={12} strokeWidth={2} className="w-12 h-12" />
                         </a>
                       </Button>
                     </div>
@@ -223,13 +224,6 @@ export default async function DashboardPage() {
             })}
           </div>
         )}
-      </div>
-
-      {/* Status Indicator */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span>STATUS</span>
-        <span className="text-green-500 font-semibold">SYSTEM LIVE</span>
       </div>
     </div>
   )
