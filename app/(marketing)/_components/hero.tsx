@@ -7,7 +7,11 @@ const Hero = () => {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8'>
             <div className='flex flex-col items-center justify-center'>
                 <div className='space-y-6'>
-                <h1 className='text-[clamp(60px,13vw,160px)] font-bold font-bebas-neue italic text-center leading-[0.8]'><span className='text-primary'>STOP GUESSING.</span> <br /> START BUILDING <br /> <span className='text-accent underline decoration-tertiary'>HYPER-FAST.</span></h1>
+                <h1 className='text-[clamp(60px,13vw,160px)] font-bold font-bebas-neue italic text-center leading-[0.8]'>
+  <span className='text-primary'>STOP WAITING.</span> <br />
+  START LAUNCHING <br />
+  <span className='text-accent underline decoration-tertiary'>VIRAL WAITLISTS.</span>
+</h1>
                 <p className='text-center text-xl text-muted-foreground max-w-2xl mx-auto'>The waitlist engine for products that don&apos;t do 'quiet launches'. High-impact tools for high-growth builders</p>
                 </div>
             </div>

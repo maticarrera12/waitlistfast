@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import React from 'react'
@@ -22,7 +23,7 @@ const CTA = () => {
           </p>
           
           <div className='flex flex-col sm:flex-row gap-4 w-full max-w-md'>
-            <Input 
+            <Input
               type='email' 
               placeholder='YOUR@EMAIL.COM' 
               className='flex-1 bg-background border-gray-700 text-foreground rounded-full px-6 py-6 text-center font-space-mono'

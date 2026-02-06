@@ -108,3 +108,176 @@ body {
   font-family: var(--font-space-mono);
 }
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-visible {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.5 0 0) transparent;
+  }
+  .scrollbar-visible::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .scrollbar-visible::-webkit-scrollbar-button:start:decrement,
+  .scrollbar-visible::-webkit-scrollbar-button:end:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  .scrollbar-visible::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb {
+    background-color: oklch(0.5 0 0);
+    border-radius: 4px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.4 0 0);
+  }
+  .dark .scrollbar-visible {
+    scrollbar-color: oklch(0.6 0 0) transparent;
+  }
+  .dark .scrollbar-visible::-webkit-scrollbar-thumb {
+    background-color: oklch(0.6 0 0);
+  }
+  .dark .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.7 0 0);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin !important;
+    scrollbar-color: oklch(0.5 0 0) transparent !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px !important;
+    width: 8px !important;
+    display: block !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-button:start:decrement,
+  .custom-scrollbar::-webkit-scrollbar-button:end:increment {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: oklch(0.5 0 0) !important;
+    border-radius: 4px !important;
+    border: none !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.4 0 0) !important;
+  }
+  .dark .custom-scrollbar {
+    scrollbar-color: oklch(0.6 0 0) transparent !important;
+  }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: oklch(0.6 0 0) !important;
+  }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.7 0 0) !important;
+  }
+
+  .auth-cta-container {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .auth-cta-container .auth-cta-card {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: var(--primary);
+    border-radius: 50px;
+    border-top-right-radius: 70px;
+  }
+
+  .auth-cta-container .auth-cta-card .auth-cta-box {
+    position: relative;
+    padding: 10px;
+    background: var(--background);
+    border-radius: 10px;
+  }
+
+  .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge {
+    right: 0;
+    position: absolute;
+    top: -15px;
+    width: 100px;
+    height: 100px;
+    background: black;
+    border-bottom-left-radius: 50%;
+  }
+
+  .dark .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge {
+    background: white;
+  }
+  .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge::before {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border-top-right-radius: 30px;
+    box-shadow: 5px -10px 0 5px black;
+  }
+
+  .dark .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge::before {
+    box-shadow: 5px -10px 0 5px white;
+  }
+
+  .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: -30px;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border-top-right-radius: 30px;
+    box-shadow: 5px -10px 0 5px black;
+  }
+
+  .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge .auth-cta-badge-inner {
+    position: absolute;
+    inset: 10px;
+    background: var(--background);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  .dark .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge::after {
+    box-shadow: 5px -10px 0 5px white;
+  }
+  #react-query-devtools-toggle {
+    display: none !important;
+  }
+}

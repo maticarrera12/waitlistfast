@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Geist, Geist_Mono, Raleway, Space_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/navbar/comp-582";
+import { Providers } from "@/components/providers";
 
 const raleway = Raleway({subsets:['latin'],variable:'--font-sans'});
 const bebasNeue = Bebas_Neue({weight:'400',subsets:['latin'],variable:'--font-bebas-neue'});
@@ -30,7 +32,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceMono.variable} ${bebasNeue.variable} antialiased`}
       >
+        <Providers>
           {children}
+        </Providers>
       </body>
     </html>
   );
