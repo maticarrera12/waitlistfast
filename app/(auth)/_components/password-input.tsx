@@ -1,4 +1,5 @@
-import { Eye, EyeOff } from "lucide-react";
+import { ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import React, { useState } from "react";
 import { UseFormReturn, FieldValues, Path } from "react-hook-form";
 
@@ -45,7 +46,7 @@ const PasswordInput = <T extends FieldValues & { password: string }>({
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <HugeiconsIcon icon={ViewOffIcon} strokeWidth={2} className="w-4 h-4" /> : <HugeiconsIcon icon={ViewIcon} strokeWidth={2} className="w-4 h-4" />}
                 </button>
               </div>
               <PasswordStrength password={field.value} show={showPasswordRequirements} />

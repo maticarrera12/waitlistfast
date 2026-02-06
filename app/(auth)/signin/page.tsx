@@ -54,7 +54,7 @@ export default function SignInPage() {
       if (result && result.user) {
         queryClient.invalidateQueries({ queryKey: ["session"] });
         toast.success("You have been signed in");
-        router.push(searchParams.get("callbackUrl") || "/app");
+        router.push(searchParams.get("callbackUrl") || "/dashboard");
       } else {
         setError("An error occurred");
         toast.error("An error occurred");
@@ -68,7 +68,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     authClient.getSession().then((session) => {
-      if (session.data != null) router.push("/app");
+      if (session.data != null) router.push("/dashboard");
     });
   }, [router]);
 

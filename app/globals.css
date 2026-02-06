@@ -221,7 +221,7 @@ body {
   .auth-cta-container .auth-cta-card .auth-cta-box {
     position: relative;
     padding: 10px;
-    background: var(--background);
+    background: var(--card);
     border-radius: 10px;
   }
 
@@ -231,7 +231,7 @@ body {
     top: -15px;
     width: 100px;
     height: 100px;
-    background: black;
+    background: var(--background);
     border-bottom-left-radius: 50%;
   }
 
@@ -247,7 +247,7 @@ body {
     height: 30px;
     background: transparent;
     border-top-right-radius: 30px;
-    box-shadow: 5px -10px 0 5px black;
+    box-shadow: 5px -10px 0 5px var(--background);
   }
 
   .dark .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge::before {
@@ -263,13 +263,13 @@ body {
     height: 30px;
     background: transparent;
     border-top-right-radius: 30px;
-    box-shadow: 5px -10px 0 5px black;
+    box-shadow: 5px -10px 0 5px var(--background);
   }
 
   .auth-cta-container .auth-cta-card .auth-cta-box .auth-cta-badge .auth-cta-badge-inner {
     position: absolute;
     inset: 10px;
-    background: var(--background);
+    background: var(--card);
     border-radius: 50%;
     display: grid;
     place-items: center;

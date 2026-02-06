@@ -24,7 +24,7 @@ export function AuthShell({
 
       {/* Right side */}
       <div className="hidden lg:flex bg-card text-white flex-col h-full overflow-hidden p-4">
-        <div className="bg-black dark:bg-white relative rounded-2xl w-full h-full px-12 py-12 flex flex-col justify-between overflow-hidden">
+        <div className="bg-background relative rounded-2xl w-full h-full px-12 py-12 flex flex-col justify-between overflow-hidden">
           <div className="relative z-10">
             <h2 className="text-6xl font-bold text-white dark:text-black mb-4">{title}</h2>
             <p className="text-3xl text-muted-foreground max-w-none break-words">{subtitle}</p>

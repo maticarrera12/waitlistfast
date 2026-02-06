@@ -51,7 +51,7 @@ export default function SignUpPage() {
         setError("An error occurred");
       } else {
         queryClient.invalidateQueries({ queryKey: ["session"] });
-        router.push("/app");
+        router.push("/dashboard");
       }
     } catch (err) {
       setError(`An error occurred: ${err instanceof Error ? err.message : "Unknown error"}`);
@@ -60,7 +60,7 @@ export default function SignUpPage() {
 
   useEffect(() => {
     authClient.getSession().then((session) => {
-      if (session.data != null) router.push("/app");
+      if (session.data != null) router.push("/dashboard");
     });
   }, [router]);
 

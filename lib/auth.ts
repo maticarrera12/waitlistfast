@@ -27,6 +27,68 @@ async function assignAdminRole(userId: string, email: string) {
   }
 }
 
+async function createPersonalOrganization(userId: string, userEmail: string | null, userName: string | null) {
+  try {
+    // Verificar que prisma esté disponible
+    if (!prisma) {
+      console.error("Prisma client is not available");
+      return;
+    }
+
+    // Generar un slug único basado en el email o userId
+    const userSlug = userEmail 
+      ? userEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-')
+      : `user-${userId.slice(0, 8)}`
+    
+    // Asegurar que el slug sea único
+    let orgSlug = userSlug
+    let counter = 1
+    while (await prisma.organization.findUnique({ where: { slug: orgSlug } })) {
+      orgSlug = `${userSlug}-${counter}`
+      counter++
+    }
+    
+    // Crear organización y miembro en una transacción
+    const result = await prisma.$transaction(async (tx) => {
+      // Verificar que tx esté disponible
+      if (!tx || !tx.organization || !tx.member) {
+        throw new Error("Transaction client is not properly initialized");
+      }
+
+      // Crear la organización
+      const org = await tx.organization.create({
+        data: {
+          name: userName || userEmail?.split('@')[0] || 'Personal',
+          slug: orgSlug,
+          metadata: {
+            type: 'personal',
+            createdAt: new Date().toISOString(),
+          }
+        }
+      })
+      
+      // Crear el miembro como owner
+      await tx.member.create({
+        data: {
+          organizationId: org.id,
+          userId: userId,
+          role: 'owner'
+        }
+      })
+      
+      return org.id
+    })
+    
+    console.log(`Personal organization created for user ${userId} with orgId: ${result}`)
+  } catch (error) {
+    // Log pero no fallar el registro si la creación de org falla
+    console.error(`Failed to create personal organization for user ${userId}:`, error)
+    if (error instanceof Error) {
+      console.error("Error details:", error.message, error.stack)
+    }
+  }
+}
+
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   session: {
@@ -158,6 +220,24 @@ export const auth = betterAuth({
     },
   },
   databaseHooks: {
+    user: {
+      create: {
+        after: async (user: any) => {
+          // Crear organización personal automáticamente cuando se crea un usuario
+          try {
+            // Verificar que el usuario tenga las propiedades necesarias
+            if (!user || !user.id) {
+              console.error("Invalid user object in user.create.after hook:", user);
+              return;
+            }
+            await createPersonalOrganization(user.id, user.email || null, user.name || null);
+          } catch (error) {
+            // No fallar el registro si la creación de org falla
+            console.error("Error in user.create.after hook:", error);
+          }
+        },
+      },
+    },
     session: {
       create: {
         before: async (session) => {

@@ -12,3 +12,725 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+enum PlanType {
+  STARTER
+  PRO
+  BUSINESS
+}
+
+enum PlanStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  PAUSED
+}
+
+enum SubscriptionProvider {
+  LEMONSQUEEZY
+}
+
+enum PurchaseType {
+  SUBSCRIPTION
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+enum PlanInterval {
+  MONTHLY
+  YEARLY
+}
+
+// --- WAITLIST REFERRAL & REWARDS ENUMS ---
+
+enum ReferralStatus {
+  CLICKED
+  SIGNUP_STARTED
+  COMPLETED
+  VERIFIED
+  CONFIRMED
+  REJECTED
+}
+
+enum PointReason {
+  SIGNUP
+  REFERRAL_CONFIRMED
+  BONUS_ACTION
+  REWARD
+  PENALTY
+  ADJUSTMENT
+}
+
+enum RewardType {
+  FEATURE
+  ACCESS
+  DISCOUNT
+  PHYSICAL
+  CUSTOM
+}
+
+enum RewardMode {
+  POSITION_BASED
+  TIER_BASED
+  ACTION_BASED
+}
+
+enum RewardStability {
+  LOCKED
+  DYNAMIC
+  SNAPSHOT
+}
+
+enum RewardStatus {
+  LOCKED
+  UNLOCKED
+  CLAIMED
+  REVOKED
+}
+
+// --- REFERRAL CAMPAIGN ENUMS ---
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+enum ScoringMode {
+  POINTS
+  REFERRALS_ONLY
+}
+
+enum RewardDistributionRule {
+  TOP_N
+  MIN_SCORE
+  MIN_REFERRALS
+  MANUAL
+}
+
+enum PointEvent {
+  SIGNUP
+  REFERRAL_CONFIRMED
+  EMAIL_VERIFIED
+  MILESTONE
+  MANUAL
+}
+
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?   @unique
+  email         String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("user")
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  sessions      Session[]
+  accounts      Account[]
+  members       Member[]
+  invitations   Invitation[]
+  purchases     Purchase[]
+  
+  // --- SAAS & BILLING ---
+  
+  plan          PlanType    @default(STARTER)
+  planStatus    PlanStatus  @default(ACTIVE)
+
+
+    // Subscription Details
+  subscriptionProvider   SubscriptionProvider?
+  subscriptionId         String?   @unique
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime?
+  cancelAtPeriodEnd      Boolean   @default(false)
+
+  lemonSqueezyCustomerId String?   @unique
+  lemonSqueezyVariantId  String?
+
+
+  @@index([email])
+  @@index([plan])
+  @@index([lemonSqueezyCustomerId])
+  @@map("user")
+}
+
+
+
+model Session {
+  id                   String        @id
+  expiresAt            DateTime
+  token                String
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeOrganizationId String?
+  activeOrganization   Organization? @relation(fields: [activeOrganizationId], references: [id])
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  metadata  Json?
+  
+  members      Member[]
+  invitations  Invitation[]
+  sessions     Session[]
+  waitlists    Waitlist[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member") // "owner", "admin", "member"
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@index([organizationId])
+  @@map("member")
+}
+model Invitation {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String       @default("pending")
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  
+  @@map("invitation")
+}
+
+
+model Purchase {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type     PurchaseType
+  provider SubscriptionProvider
+
+  // Qué compró
+  plan    PlanType?
+
+  amount   Int      // En centavos
+  currency String   @default("usd")
+
+  // IDs externos
+  providerPaymentId      String   @unique // ID de LemonSqueezy Order / Subscription
+  providerProductId      String?
+  providerCustomerId     String?
+  providerSubscriptionId String?
+
+  metadata Json? // Metadata adicional (ej: packId, appId, etc.)
+
+  status PurchaseStatus
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// --- WAITLIST KIT CORE MODELS ---
+
+model Waitlist {
+  id            String        @id @default(cuid())
+  
+  // Identidad Pública
+  name          String        // Nombre interno o para mostrar "Tesla Cybertruck"
+  slug          String        @unique // para la URL: join.waitlistkit.com/mi-slug
+  
+  // Contenido & Customización
+  headline      String?       // "Get access to the future"
+  description   String?       @db.Text
+  
+  // Configuración Visual & Comportamiento (Flexible)
+  // Aquí guardas: { brandColor: "#000", showLogo: true, emailTemplate: "dark" }
+  settings      Json?         
+  
+  // Relación Multi-Tenant (Pertenece a una Org, no a un User suelto)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Relaciones
+  subscribers       Subscriber[]
+  referrals         Referral[]
+  rankingSnapshots  RankingSnapshot[]
+  rewardRules       RewardRule[]
+  referralCampaigns ReferralCampaign[]
+  pointRules        PointRule[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@map("waitlist")
+}
+
+model Subscriber {
+  id            String   @id @default(cuid())
+  email         String
+
+  referralCode  String   @unique
+
+  verified      Boolean  @default(false)
+
+  waitlistId    String
+  waitlist      Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  referredById  String?
+  referredBy    Subscriber? @relation("ReferralTree", fields: [referredById], references: [id])
+  referrals     Subscriber[] @relation("ReferralTree")
+
+  // Scoring & Position
+  score         Int      @default(0) // Total points accumulated (source of truth)
+  position      Int?     // Cached position in leaderboard (best-effort, eventually consistent)
+
+  metadata      Json?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  referralsAsReferrer    Referral[]        @relation("Referrer")
+  referralsAsReferred    Referral[]        @relation("Referred")
+  pointLedgers           PointLedger[]
+  rankingSnapshots       RankingSnapshot[]
+  rewardAssignments      RewardAssignment[]
+  subscriberRewards      SubscriberReward[]
+
+  @@unique([waitlistId, email])
+  @@index([waitlistId])
+  @@index([referredById])
+  @@index([waitlistId, score]) // For leaderboard queries
+  @@map("subscriber")
+}
+
+// --- REFERRAL LIFECYCLE ---
+
+model Referral {
+  id            String @id @default(cuid())
+
+  waitlistId    String
+  waitlist      Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  referrerId    String
+  referrer      Subscriber @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+
+  referredEmail String
+  referredId    String?
+  referred      Subscriber? @relation("Referred", fields: [referredId], references: [id])
+
+  status        ReferralStatus
+
+  source        String? // twitter, email, linkedin
+  ipAddress     String?
+  userAgent     String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([referrerId])
+  @@index([status])
+  @@index([waitlistId])
+  @@map("referral")
+}
+
+// --- POINT LEDGER (CONTABILIDAD REAL) ---
+//
+// This is the source of truth for all point transactions.
+// Every point awarded or deducted is recorded here for:
+// - Audit trail
+// - Recalculation (if rules change)
+// - Debugging point discrepancies
+// - Analytics and reporting
+//
+// Design decision: Points are tied to campaigns, not just waitlists,
+// because scoring rules are campaign-specific. This allows:
+// - Multiple campaigns with different rules
+// - Historical point tracking per campaign
+// - Recalculation of points if campaign rules change
+
+model PointLedger {
+  id            String @id @default(cuid())
+
+  subscriberId  String
+  subscriber    Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  campaignId    String
+  campaign      ReferralCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  // Event that triggered this point award
+  event         PointEvent
+
+  // Points awarded (can be negative for penalties/adjustments)
+  points        Int
+
+  // Optional reference to related record (referralId, etc.)
+  referenceId   String?
+
+  // Metadata for debugging/analytics
+  // Example: { referralId: "abc123", milestone: 5, ruleId: "rule_xyz" }
+  metadata      Json?
+
+  createdAt     DateTime @default(now())
+
+  @@index([subscriberId])
+  @@index([campaignId])
+  @@index([event])
+  @@index([campaignId, subscriberId]) // For subscriber point history per campaign
+  @@map("point_ledger")
+}
+
+// --- RANKING SNAPSHOT (POSICIONES REALES) ---
+
+model RankingSnapshot {
+  id           String @id @default(cuid())
+
+  waitlistId   String
+  waitlist     Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  subscriberId String
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  position     Int
+  score        Int
+
+  calculatedAt DateTime @default(now())
+  isFinal      Boolean  @default(false)
+
+  @@index([waitlistId, position])
+  @@index([waitlistId, calculatedAt])
+  @@index([subscriberId])
+  @@map("ranking_snapshot")
+}
+
+// --- REWARD RULES (LO QUE EL CREATOR DEFINE) ---
+
+model RewardRule {
+  id            String @id @default(cuid())
+
+  waitlistId    String
+  waitlist      Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  name          String
+  description   String?
+
+  type          RewardType
+  mode          RewardMode
+  stability     RewardStability
+
+  minPosition   Int?
+  maxPosition   Int?
+
+  minReferrals  Int?
+
+  rewardData    Json // qué recibe (link, feature key, etc)
+
+  startsAt      DateTime?
+  endsAt        DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  rewardAssignments RewardAssignment[]
+
+  @@index([waitlistId])
+  @@index([mode])
+  @@map("reward_rule")
+}
+
+// --- REWARD ASSIGNMENT (QUIÉN GANÓ QUÉ) ---
+
+model RewardAssignment {
+  id            String @id @default(cuid())
+
+  rewardRuleId  String
+  rewardRule    RewardRule @relation(fields: [rewardRuleId], references: [id], onDelete: Cascade)
+
+  subscriberId  String
+  subscriber    Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  status        RewardStatus
+
+  assignedAt    DateTime @default(now())
+  claimedAt      DateTime?
+
+  metadata      Json?
+
+  @@index([subscriberId])
+  @@index([rewardRuleId])
+  @@index([status])
+  @@map("reward_assignment")
+}
+
+// --- REFERRAL CAMPAIGN (ONE ACTIVE CAMPAIGN PER WAITLIST) ---
+// 
+// This model represents a configurable referral campaign for a waitlist.
+// Each waitlist can have one active campaign at a time (enforced at application level).
+// Campaign settings are stored as JSON for maximum flexibility, similar to how
+// KickoffLabs and ViralLoops handle campaign configuration.
+//
+// Key design decisions:
+// - Status-based lifecycle (DRAFT -> ACTIVE -> PAUSED/ENDED)
+// - JSON settings for extensibility without schema migrations
+// - Snapshot leaderboard support for final rankings
+// - Scoring mode allows points-based or referral-count-only leaderboards
+
+model ReferralCampaign {
+  id        String   @id @default(cuid())
+
+  waitlistId String
+  waitlist   Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  name      String
+  status    CampaignStatus @default(DRAFT)
+
+  // Campaign Settings (JSON for flexibility)
+  // Example structure:
+  // {
+  //   referralsEnabled: true,
+  //   leaderboardEnabled: true,
+  //   maxWinners: 100,
+  //   scoringMode: "POINTS",
+  //   snapshotLeaderboard: false,
+  //   allowSelfReferrals: false,
+  //   requireEmailVerification: true,
+  //   tieBreaker: "EARLIEST_SIGNUP"
+  // }
+  settings  Json
+
+  // Campaign lifecycle
+  startsAt  DateTime?
+  endsAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  rewards      Reward[]
+  pointLedgers PointLedger[]
+
+  @@index([waitlistId, status]) // For finding active campaign
+  @@index([status])
+  @@map("referral_campaign")
+}
+
+// --- REWARD (BELONGS TO A CAMPAIGN) ---
+//
+// Rewards are defined per campaign and can be distributed based on different rules.
+// This design allows multiple reward tiers (e.g., top 10 get X, top 100 get Y).
+//
+// Distribution rules:
+// - TOP_N: First N subscribers by rank
+// - MIN_SCORE: All subscribers with score >= threshold
+// - MIN_REFERRALS: All subscribers with referral count >= threshold
+// - MANUAL: Admin manually assigns (for special cases)
+//
+// Reward payload is JSON to support various types:
+// - FEATURE: { featureFlags: ["beta_access", "early_feature"] }
+// - ACCESS: { accessLevel: "premium", expiresAt: "2024-12-31" }
+// - DIGITAL: { couponCode: "EARLY50", discount: 50 }
+// - CUSTOM: { description: "Custom reward", redemptionUrl: "..." }
+
+model Reward {
+  id            String   @id @default(cuid())
+
+  campaignId    String
+  campaign      ReferralCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  name          String
+  description   String?  @db.Text
+
+  type          RewardType
+
+  // Distribution rule
+  distributionRule RewardDistributionRule
+
+  // Rule parameters (JSON for flexibility)
+  // For TOP_N: { topN: 10 }
+  // For MIN_SCORE: { minScore: 100 }
+  // For MIN_REFERRALS: { minReferrals: 20 }
+  // For MANUAL: {}
+  ruleParams    Json
+
+  // Reward payload (what the subscriber receives)
+  payload       Json
+
+  // Optional limits
+  maxRecipients Int?    // Max number of people who can receive this reward
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  subscriberRewards SubscriberReward[]
+
+  @@index([campaignId])
+  @@map("reward")
+}
+
+// --- SUBSCRIBER REWARD (JOIN TABLE) ---
+//
+// Tracks which subscribers have earned/claimed which rewards.
+// Status lifecycle: LOCKED -> EARNED -> DELIVERED
+//
+// This allows for:
+// - Reward tracking and analytics
+// - Preventing duplicate rewards
+// - Manual reward delivery workflows
+
+model SubscriberReward {
+  id            String   @id @default(cuid())
+
+  subscriberId  String
+  subscriber    Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  rewardId      String
+  reward        Reward @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+
+  status        RewardStatus @default(LOCKED)
+
+  // When reward was unlocked
+  unlockedAt    DateTime?
+
+  // When reward was delivered/claimed
+  deliveredAt   DateTime?
+
+  metadata      Json?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([subscriberId, rewardId]) // Prevent duplicate rewards
+  @@index([subscriberId])
+  @@index([rewardId])
+  @@index([status])
+  @@map("subscriber_reward")
+}
+
+// --- POINT RULE (FLEXIBLE SCORING SYSTEM) ---
+//
+// Rules-based point system for maximum configurability.
+// Each rule defines: "When event X happens, award Y points"
+//
+// Examples:
+// - REFERRAL_CONFIRMED: +10 points
+// - EMAIL_VERIFIED: +5 points
+// - MILESTONE_REACHED (5 referrals): +50 bonus points
+//
+// This design allows campaign creators to customize scoring without code changes.
+// Similar to how ViralLoops lets you configure point values per action.
+
+model PointRule {
+  id            String   @id @default(cuid())
+
+  waitlistId    String
+  waitlist      Waitlist @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+
+  // Which event triggers this rule
+  event         PointEvent
+
+  // Points to award
+  points        Int
+
+  // Optional conditions (JSON)
+  // Milestones are conditions, not events. Example:
+  // { referralCount: { equals: 1 } } - First referral only
+  // { referralCount: { equals: 5 } } - 5th referral milestone
+  // { referralCount: { gte: 10 } } - 10+ referrals
+  // { minScore: 100 } - Minimum score required
+  // { firstReferralOnly: true } - Shorthand for referralCount === 1
+  conditions    Json?
+
+  // Rule name/description for admin UI
+  name          String?
+  description   String?
+
+  // Is this rule active?
+  isActive      Boolean  @default(true)
+
+  // Priority (lower = evaluated first)
+  priority      Int      @default(0)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([waitlistId, event, isActive])
+  @@index([waitlistId])
+  @@map("point_rule")
+}

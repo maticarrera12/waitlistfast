@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 
 import { auth, assignAdminRole } from "../lib/auth";
 import { signInSchema, signUpSchema } from "@/lib/schemas/auth.schema";
+import { prisma } from "@/lib/prisma";
 
 export const signUp = async (email: string, password: string, name: string) => {
   const validated = signUpSchema.safeParse({ email, password, name });
@@ -39,6 +40,54 @@ export const signUp = async (email: string, password: string, name: string) => {
       error: { message },
       user: result.user,
     };
+  }
+
+  // Crear organización personal si no existe
+  try {
+    const existingMembership = await prisma.member.findFirst({
+      where: { userId: result.user.id },
+      select: { organizationId: true }
+    });
+
+    if (!existingMembership) {
+      // Generar un slug único basado en el email o userId
+      const userSlug = result.user.email 
+        ? result.user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-')
+        : `user-${result.user.id.slice(0, 8)}`
+      
+      // Asegurar que el slug sea único
+      let orgSlug = userSlug
+      let counter = 1
+      while (await prisma.organization.findUnique({ where: { slug: orgSlug } })) {
+        orgSlug = `${userSlug}-${counter}`
+        counter++
+      }
+      
+      // Crear organización y miembro en una transacción
+      await prisma.$transaction(async (tx) => {
+        const org = await tx.organization.create({
+          data: {
+            name: result.user.name || result.user.email?.split('@')[0] || 'Personal',
+            slug: orgSlug,
+            metadata: {
+              type: 'personal',
+              createdAt: new Date().toISOString(),
+            }
+          }
+        })
+        
+        await tx.member.create({
+          data: {
+            organizationId: org.id,
+            userId: result.user.id,
+            role: 'owner'
+          }
+        })
+      })
+    }
+  } catch (error) {
+    // Log pero no fallar el registro si la creación de org falla
+    console.error("Failed to create personal organization:", error);
   }
 
   return { error: null, user: result.user };
