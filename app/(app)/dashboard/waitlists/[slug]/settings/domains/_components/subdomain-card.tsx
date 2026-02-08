@@ -38,7 +38,7 @@ export function SubdomainCard({ subdomain }: SubdomainCardProps) {
             </CardDescription>
           </div>
           <Badge variant="default" className="bg-green-100 text-green-700 border-green-200">
-            <HugeiconsIcon icon={CheckCircleIcon} className="w-3 h-3 mr-1" />
+            <HugeiconsIcon icon={CheckmarkCircle01Icon} className="w-3 h-3 mr-1" />
             Active
           </Badge>
         </div>
