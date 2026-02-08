@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition, useCallback } from "react";
+import { useEffect, useState, useTransition, useCallback, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -28,7 +28,7 @@ import { type SignInInput, signInSchema } from "@/lib/schemas/auth.schema";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { signIn } from "@/actions/auth-actions";
 
-export default function SignInPage() {
+function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -216,5 +216,28 @@ export default function SignInPage() {
         </div>
       </div>
     </AuthShell>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <AuthShell
+        title="Loading..."
+        subtitle=""
+        cardTitle="Loading..."
+        cardSubtitle=""
+      >
+        <div className="flex items-center justify-center bg-background px-4">
+          <div className="max-w-md w-full space-y-8">
+            <div className="text-center">
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </AuthShell>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }
