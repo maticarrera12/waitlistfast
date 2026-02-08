@@ -59,7 +59,7 @@ export async function createPointRule(data: z.infer<typeof pointRuleSchema>) {
         waitlistId: validated.waitlistId,
         event: validated.event,
         points: validated.points,
-        conditions: validated.conditions || null,
+        conditions: validated.conditions || undefined,
         name: validated.name || null,
         description: validated.description || null,
         isActive: validated.isActive,
