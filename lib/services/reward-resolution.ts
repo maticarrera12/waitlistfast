@@ -13,7 +13,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@/lib/generated/prisma/client'
+import type { Prisma } from '@/src/generated/internal/prismaNamespace'
 import { getLeaderboard, getSubscriberPosition } from './leaderboard'
 
 export interface EvaluateRewardUnlocksParams {
