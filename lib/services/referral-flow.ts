@@ -166,7 +166,7 @@ export async function processReferral(
         }
       }
 
-      console.log('[PROCESS_REFERRAL] Active campaign found, referrals enabled:', settings.referralsEnabled !== false)
+      console.log('[PROCESS_REFERRAL] Active campaign found, referrals enabled:', settings.referralsEnabled ?? true)
 
       // 7. Create or update Referral record
       // First, try to find an existing referral record (in case of retry)
