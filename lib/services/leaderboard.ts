@@ -18,7 +18,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@/src/generated/internal/prismaNamespace'
+import type { Prisma } from '@/src/generated/client'
 
 export interface UpdateLeaderboardPositionParams {
   waitlistId: string

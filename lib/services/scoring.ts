@@ -14,7 +14,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@/src/generated/internal/prismaNamespace'
+import type { Prisma } from '@/src/generated/client'
 import { updateLeaderboardPosition } from './leaderboard'
 
 export interface EvaluatePointRulesParams {
