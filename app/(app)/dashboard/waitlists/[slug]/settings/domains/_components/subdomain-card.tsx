@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Copy01Icon, CheckCircleIcon } from '@hugeicons/core-free-icons'
+import { Copy01Icon, CheckmarkCircle01Icon } from '@hugeicons/core-free-icons'
 import { toast } from 'sonner'
 
 interface SubdomainCardProps {
@@ -60,7 +60,7 @@ export function SubdomainCard({ subdomain }: SubdomainCardProps) {
               className="gap-2 shrink-0"
             >
               <HugeiconsIcon 
-                icon={copied ? CheckCircleIcon : Copy01Icon} 
+                icon={copied ? CheckmarkCircle01Icon : Copy01Icon} 
                 strokeWidth={2} 
                 className="w-4 h-4" 
               />

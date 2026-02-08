@@ -16,7 +16,10 @@ import { TextHoverEffect } from "@/components/ui/hover-footer";
 
 function HoverFooter() {
   // Footer link data
-  const footerLinks = [
+  const footerLinks: Array<{
+    title: string
+    links: Array<{ label: string; href: string; pulse?: boolean }>
+  }> = [
     // {
     //   title: "About Us",
     //   links: [
