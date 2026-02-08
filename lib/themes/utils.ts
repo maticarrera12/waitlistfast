@@ -35,7 +35,8 @@ export function withTheme(
  */
 export function getThemeColor(themeName: ThemeName, colorKey: keyof ThemeConfig['colors']): string {
   const theme = getTheme(themeName)
-  return theme.colors[colorKey]
+  const color = theme.colors[colorKey]
+  return color ?? theme.colors.primary // Fallback to primary if color is undefined
 }
 
 /**

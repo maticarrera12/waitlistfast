@@ -93,7 +93,7 @@ export function Pricing() {
         {/* Title Section */}
         <div className="relative mb-32 text-center">
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
-            <span className="bg-tertiary/10 px-4 py-1 font-black uppercase  text-sm text-tertiary">
+            <span className="bg-tertiary/10 px-4 py-1 font-black uppercase mb-4 text-sm text-tertiary">
               Transparent Pricing
             </span>
           </div>
