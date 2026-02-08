@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useTransition } from "react";
+import { useTransition, Suspense } from "react";
 import { toast } from "sonner";
 
 import PasswordInput from "@/app/(auth)/_components/password-input";
@@ -16,7 +16,7 @@ import { ResetPasswordInput, resetPasswordSchema } from "@/lib/schemas/auth.sche
 import Link from "next/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -114,5 +114,21 @@ export default function ResetPasswordPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md mx-auto bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-primary">Loading...</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
