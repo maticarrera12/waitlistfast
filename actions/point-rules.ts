@@ -97,7 +97,9 @@ export async function updatePointRule(data: z.infer<typeof updatePointRuleSchema
       data: {
         ...(validated.event && { event: validated.event }),
         ...(validated.points !== undefined && { points: validated.points }),
-        ...(validated.conditions !== undefined && { conditions: validated.conditions }),
+        ...(validated.conditions !== undefined && { 
+          conditions: validated.conditions === null ? undefined : validated.conditions 
+        }),
         ...(validated.name !== undefined && { name: validated.name }),
         ...(validated.description !== undefined && { description: validated.description }),
         ...(validated.isActive !== undefined && { isActive: validated.isActive }),
