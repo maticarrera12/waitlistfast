@@ -23,12 +23,18 @@ import Link from "next/link";
 
 export default function UserMenu() {
   const { data: session } = useSessionQuery();
-  const { data: adminData } = useAdminRoleQuery(!!session?.user);
+  const { data: adminData, isLoading: isLoadingAdmin, error: adminError } = useAdminRoleQuery(!!session?.user);
   const queryClient = useQueryClient();
   const router = useRouter();
 
   if (!session?.user) return null;
-  const isAdmin = adminData?.isAdmin ?? false;
+  
+  // Check if user is admin from session first, then from API
+  const userRole = (session.user as { role?: string })?.role;
+  const isAdminFromSession = userRole === "admin";
+  // If session has role, use it; otherwise fall back to API check
+  // Show admin panel if session says admin OR if API confirms admin (even if API is still loading and session doesn't have role)
+  const isAdmin = isAdminFromSession || (adminData?.isAdmin ?? false);
   const userPlan = (session.user as { plan?: string })?.plan || "FREE";
 
   const handleSignOut = async () => {

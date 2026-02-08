@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Copy01Icon, CheckmarkBadge02Icon } from '@hugeicons/core-free-icons'
 import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useTheme, ThemeName } from '@/lib/themes'
@@ -20,17 +21,32 @@ interface JoinFormProps {
 
 export function JoinForm({ waitlistId, themeName, waitlistSlug, subscriberCount }: JoinFormProps) {
   const theme = useTheme(themeName)
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [state, action, isPending] = useActionState(joinWaitlist, null)
   const [copied, setCopied] = useState(false)
   const [shareLink, setShareLink] = useState('')
+  const [hasRefreshed, setHasRefreshed] = useState(false)
+  
+  // Get referral code from URL to pass to server action
+  const refCode = searchParams.get('ref')
 
   // Generar el link de compartir cuando el usuario se suscribe
   useEffect(() => {
     if (state?.success && state.subscriber) {
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
       setShareLink(`${baseUrl}/w/${waitlistSlug}?ref=${state.subscriber.referralCode}`)
+      
+      // Refresh page to load subscriber data for rewards progress
+      if (!hasRefreshed) {
+        setHasRefreshed(true)
+        // Small delay to ensure cookie is set
+        setTimeout(() => {
+          router.refresh()
+        }, 500)
+      }
     }
-  }, [state, waitlistSlug])
+  }, [state, waitlistSlug, router, hasRefreshed])
 
   // SI HAY ÉXITO: MUESTRA LA VISTA DE "SUSCRITO"
   if (state?.success && state.subscriber) {
@@ -106,6 +122,7 @@ export function JoinForm({ waitlistId, themeName, waitlistSlug, subscriberCount 
   return (
     <form action={action} className="w-full max-w-md mx-auto flex flex-col gap-4">
       <input type="hidden" name="waitlistId" value={waitlistId} />
+      {refCode && <input type="hidden" name="referralCode" value={refCode} />}
       
       <div className="flex flex-col sm:flex-row gap-2">
         <Input 

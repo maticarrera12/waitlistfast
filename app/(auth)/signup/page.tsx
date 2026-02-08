@@ -53,7 +53,7 @@ export default function SignUpPage() {
       } else {
         queryClient.invalidateQueries({ queryKey: ["session"] });
         startTransition(() => {
-          router.push("/dashboard");
+        router.push("/dashboard");
         });
       }
     } catch (err) {

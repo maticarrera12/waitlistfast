@@ -1,3 +1,4 @@
+import HoverFooter from '@/components/footer/footer'
 import Navbar from '@/components/navbar/comp-582'
 import React from 'react'
 
@@ -6,6 +7,7 @@ const MarketingLayout = ({ children }: { children: React.ReactNode }) => {
     <div>
         <Navbar />
         {children}
+        <HoverFooter />
     </div>
   )
 }

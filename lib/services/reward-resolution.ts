@@ -13,7 +13,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@/lib/generated/prisma'
+import type { Prisma } from '@/lib/generated/prisma/client'
 import { getLeaderboard, getSubscriberPosition } from './leaderboard'
 
 export interface EvaluateRewardUnlocksParams {
@@ -107,7 +107,7 @@ export async function evaluateRewardUnlocks(
           where: {
             rewardId: reward.id,
             status: {
-              in: ['EARNED', 'DELIVERED'],
+              in: ['UNLOCKED', 'CLAIMED'],
             },
           },
         })
@@ -132,7 +132,7 @@ export async function evaluateRewardUnlocks(
           data: {
             subscriberId,
             rewardId: reward.id,
-            status: 'EARNED',
+            status: 'UNLOCKED',
             unlockedAt: new Date(),
           },
         })
@@ -277,7 +277,7 @@ export async function resolveAllRewards(
             where: {
               rewardId: reward.id,
               status: {
-                in: ['EARNED', 'DELIVERED'],
+                in: ['UNLOCKED', 'CLAIMED'],
               },
             },
           })
@@ -302,7 +302,7 @@ export async function resolveAllRewards(
             data: {
               subscriberId: subscriber.id,
               rewardId: reward.id,
-              status: 'EARNED',
+              status: 'UNLOCKED',
               unlockedAt: new Date(),
             },
           })
@@ -344,9 +344,9 @@ export async function markRewardDelivered(
   await prisma.subscriberReward.update({
     where: { id: subscriberRewardId },
     data: {
-      status: 'DELIVERED',
+      status: 'CLAIMED',
       deliveredAt: new Date(),
-      metadata: metadata || null,
+      metadata: metadata || undefined,
     },
   })
 }

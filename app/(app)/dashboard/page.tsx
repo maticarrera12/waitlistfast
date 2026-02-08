@@ -197,7 +197,7 @@ export default async function DashboardPage() {
                     </div>
 
                     <div className="flex items-center gap-2 md:gap-8">
-                      <Button asChild className="flex-1 py-8 rounded-full bg-primary text-background hover:bg-primary/80 font-bold text-xl">
+                      <Button asChild className="flex-1 py-8 bg-primary text-background hover:bg-primary/80 font-bold text-xl">
                         <Link href={`/dashboard/waitlists/${waitlist.slug}`}>
                           Manage Campaign
                         </Link>
@@ -206,13 +206,13 @@ export default async function DashboardPage() {
                         variant="outline" 
                         size="icon"
                         asChild
-                        className='bg-card border border-muted-foreground text-muted-foreground hover:bg-card/80 rounded-full p-8'
+                        className='bg-card border border-muted-foreground text-muted-foreground hover:bg-card/80 p-8'
                       >
                         <a 
                           href={publicUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center text-muted-foreground rounded-full p-8"
+                          className="flex items-center justify-center text-muted-foreground  p-8"
                         >
                           <HugeiconsIcon icon={Share06Icon} size={12} strokeWidth={2} className="w-12 h-12" />
                         </a>

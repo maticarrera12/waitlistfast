@@ -32,6 +32,7 @@ export interface ProcessReferralResult {
   referrerId: string | null
   pointsAwarded: number
   error?: string
+  campaignId?: string // Internal use only
 }
 
 /**
@@ -63,7 +64,8 @@ export async function processReferral(
   }
 
   try {
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(
+      async (tx) => {
       // 1. Find the referrer by referral code
       const referrer = await tx.subscriber.findUnique({
         where: { referralCode },
@@ -140,6 +142,7 @@ export async function processReferral(
 
       if (!activeCampaign) {
         // No active campaign, referrals are disabled
+        console.warn('[PROCESS_REFERRAL] No active campaign found for waitlist:', waitlistId)
         return {
           success: false,
           referrerId: null,
@@ -154,6 +157,7 @@ export async function processReferral(
       }
 
       if (settings.referralsEnabled === false) {
+        console.warn('[PROCESS_REFERRAL] Referrals are disabled in campaign settings')
         return {
           success: false,
           referrerId: null,
@@ -161,6 +165,8 @@ export async function processReferral(
           error: 'Referrals are disabled for this campaign',
         }
       }
+
+      console.log('[PROCESS_REFERRAL] Active campaign found, referrals enabled:', settings.referralsEnabled !== false)
 
       // 7. Create or update Referral record
       // First, try to find an existing referral record (in case of retry)
@@ -183,6 +189,7 @@ export async function processReferral(
             source: null, // Can be enhanced with tracking params
           },
         })
+        console.log('[PROCESS_REFERRAL] Created new referral record:', referral.id)
       } else {
         // Update existing referral to CONFIRMED status
         referral = await tx.referral.update({
@@ -192,6 +199,7 @@ export async function processReferral(
             status: 'CONFIRMED',
           },
         })
+        console.log('[PROCESS_REFERRAL] Updated existing referral record:', referral.id)
       }
 
       // 8. Update subscriber's referredBy field
@@ -221,20 +229,42 @@ export async function processReferral(
         tx,
       })
 
-      // 11. Check for reward unlocks for referrer
-      await evaluateRewardUnlocks({
-        waitlistId,
-        subscriberId: referrer.id,
-        campaignId: activeCampaign.id,
-        tx,
-      })
-
+      // Return result from transaction (rewards will be evaluated outside transaction)
       return {
         success: true,
         referrerId: referrer.id,
         pointsAwarded,
+        campaignId: activeCampaign.id, // Include for reward evaluation
       }
-    })
+      },
+      {
+        maxWait: 10000, // Maximum time to wait for a transaction slot (10s)
+        timeout: 10000, // Maximum time the transaction can run (10s)
+      }
+    )
+      .then(async (result) => {
+        // Evaluate rewards outside transaction to avoid timeout
+        // This is safe because rewards don't need to be in the same transaction
+        if (result.success && result.referrerId && result.campaignId) {
+          try {
+            await evaluateRewardUnlocks({
+              waitlistId,
+              subscriberId: result.referrerId,
+              campaignId: result.campaignId,
+            })
+          } catch (rewardError) {
+            // Don't fail the referral if reward evaluation fails
+            console.warn('[PROCESS_REFERRAL] Reward evaluation failed (non-critical):', rewardError)
+          }
+        }
+        // Return result without campaignId (not part of public interface)
+        return {
+          success: result.success,
+          referrerId: result.referrerId,
+          pointsAwarded: result.pointsAwarded,
+          error: result.error,
+        }
+      })
   } catch (error) {
     console.error('Error processing referral:', error)
     return {

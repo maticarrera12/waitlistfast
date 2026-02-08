@@ -7,7 +7,7 @@ const CTA = () => {
   return (
     <div className='bg-background min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8'>
       <div className='max-w-7xl mx-auto w-full '>
-        <div className='border-2 border-primary rounded-lg px-8 sm:px-12 py-16 sm:py-32 flex flex-col items-center gap-6 relative overflow-hidden'>
+        <div className='border-8 border-primary px-8 sm:px-12 py-16 sm:py-32 flex flex-col items-center gap-6 relative overflow-hidden'>
           {/* Efecto de glow con múltiples colores */}
           <div className='absolute bottom-0 left-0 w-64 h-64 bg-primary/30 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2'></div>
           <div className='absolute bottom-0 left-0 w-80 h-80 bg-secondary/20 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3'></div>

@@ -26,7 +26,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   slug: z.string().min(3, "Slug must be at least 3 chars").regex(/^[a-z0-9-]+$/, "Lowercase, numbers and dashes only"),
   description: z.string().optional(),
-  theme: z.enum(['linear', 'stripe', 'notion', 'apple', 'brutalist', 'webflow']).default('linear'),
+  theme: z.enum(['default', 'linear', 'stripe', 'notion', 'apple', 'brutalist', 'webflow']).default('default'),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -47,6 +47,13 @@ const TYPE_OPTIONS = [
 
 // Theme options with metadata
 const THEME_OPTIONS = [
+  { 
+    id: 'default' as ThemeName, 
+    icon: '🎨', 
+    name: 'Default', 
+    description: 'Uses your app theme - Matches your brand',
+    emoji: '🎨'
+  },
   { 
     id: 'linear' as ThemeName, 
     icon: '⚪️', 
@@ -103,7 +110,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
       name: '',
       slug: '',
       description: '',
-      theme: 'linear' as ThemeName
+      theme: 'default' as ThemeName
     },
     mode: 'onChange'
   })
@@ -138,8 +145,18 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
         return
       }
       
-      // Si no hay error, la acción hace redirect automáticamente
-      // No llegamos aquí si hay redirect, pero por si acaso:
+      // Si hay éxito, redirigir al subdominio
+      if (result?.success && result?.subdomainUrl) {
+        toast.success('Waitlist created successfully!')
+        setOpen(false)
+        form.reset()
+        setStep(1)
+        // Redirigir al subdominio
+        window.location.href = result.subdomainUrl
+        return
+      }
+      
+      // Fallback: si no hay subdomainUrl, redirigir al dashboard
       toast.success('Waitlist created successfully!')
       setOpen(false)
       form.reset()
@@ -169,7 +186,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
     const themeConfig = getTheme(themeName)
 
     return (
-      <div className="relative mx-auto w-full h-full max-w-[600px] max-h-[500px] rounded-lg border-2 border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
+      <div className="relative mx-auto w-full h-full max-w-[600px] max-h-[500px] rounded-none border-2 border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl ring-1 ring-white/10">
         {/* Browser Chrome */}
         <div className="h-8 bg-zinc-800 border-b border-zinc-700 flex items-center px-3 gap-2">
           <div className="flex gap-1.5">
@@ -178,7 +195,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
             <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
           </div>
           <div className="flex-1 h-5 bg-zinc-900/50 rounded text-[10px] flex items-center px-2 text-zinc-500 font-mono">
-            waitlistkit.com/w/{watchedValues.slug || 'your-slug'}
+            waitlistfast.com/w/{watchedValues.slug || 'your-slug'}
           </div>
         </div>
 
@@ -306,14 +323,14 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button size="lg" className="bg-yellow-400 text-black hover:bg-yellow-500 font-bold">
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/80 font-bold">
             Create New Waitlist
           </Button>
         )}
       </DialogTrigger>
       
       {/* Increased max-width for the split view */}
-      <DialogContent className="sm:max-w-[900px] bg-zinc-950 text-white border-zinc-800 p-0 overflow-hidden gap-0">
+      <DialogContent className="sm:max-w-[900px] bg-zinc-950 text-white border-zinc-800 p-0 overflow-hidden gap-0 rounded-none">
         <DialogHeader className="sr-only">
           <DialogTitle>
             {step === 1 ? "Choose Project Type" : step === 2 ? "Configure Waitlist Identity" : "Visualize Your Waitlist"}
@@ -321,21 +338,28 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
         </DialogHeader>
         
         {/* HEADER */}
-        <div className="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-950">
-           <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-400 text-black text-xs font-bold">
-                {step}
-              </span>
+        <div className="p-6 pb-0 border-b border-zinc-800 bg-zinc-950">
+           <div className="mb-4">
               <span className="text-zinc-400 text-sm font-medium tracking-wide">
                  {step === 1 ? "CHOOSE TYPE" : step === 2 ? "CONFIGURE IDENTITY" : "VISUALIZE"}
               </span>
            </div>
-           {/* Steps Indicator dots */}
-           <div className="flex gap-1.5">
-             {[1, 2, 3].map(i => (
-               <div key={i} className={cn("h-1.5 w-1.5 rounded-full transition-all", i === step ? "bg-yellow-400 w-6" : i < step ? "bg-yellow-400/50" : "bg-zinc-800")} />
-             ))}
-           </div>
+        </div>
+        
+        {/* Progress Bar - 3 Steps (at the border, full width) */}
+        <div className="w-full h-1 bg-zinc-800 flex">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className={cn(
+                "h-full transition-all duration-300",
+                i <= step
+                  ? "bg-primary"
+                  : "bg-transparent"
+              )}
+              style={{ width: `${100 / 3}%` }}
+            />
+          ))}
         </div>
 
         <div className="flex h-[550px]">
@@ -345,7 +369,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                 {/* STEP 1: TYPE SELECTION */}
                 {step === 1 && (
                   <div className="space-y-4">
-                    <h1 className="text-2xl font-bold mb-1">Let's start with <span className="text-yellow-400">the basics.</span></h1>
+                    <h1 className="text-2xl font-bold mb-1">Let's start with <span className="text-primary">the basics.</span></h1>
                     <p className="text-zinc-500 text-sm mb-6">What kind of product are you launching today?</p>
                     
                     <div className="grid grid-cols-2 gap-3">
@@ -363,7 +387,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                                 ? "cursor-pointer hover:border-zinc-600 hover:bg-zinc-900" 
                                 : "cursor-not-allowed opacity-50",
                               isSelected && isAvailable
-                                ? "border-yellow-400 bg-yellow-400/5 ring-1 ring-yellow-400/20" 
+                                ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
                                 : "border-zinc-800 bg-zinc-900/50"
                             )}
                           >
@@ -377,7 +401,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                               strokeWidth={2} 
                               className={cn(
                                 "w-6 h-6 mb-3", 
-                                isSelected && isAvailable ? "text-yellow-400" : "text-zinc-500",
+                                isSelected && isAvailable ? "text-primary" : "text-zinc-500",
                                 isAvailable && "group-hover:text-zinc-300"
                               )} 
                             />
@@ -394,7 +418,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                 {step === 2 && (
                   <div className="space-y-6 animate-in slide-in-from-left-4 fade-in duration-300">
                     <div>
-                      <h1 className="text-2xl font-bold">Project <span className="text-yellow-400">Identity.</span></h1>
+                      <h1 className="text-2xl font-bold">Project <span className="text-primary">Identity.</span></h1>
                       <p className="text-zinc-500 text-sm mt-1">Make it memorable.</p>
                     </div>
 
@@ -403,7 +427,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                         <Label className="text-xs font-bold tracking-wider text-zinc-400 uppercase">Waitlist Name</Label>
                         <Input 
                           {...form.register('name')}
-                          className="bg-zinc-900/50 border-zinc-800 h-12 text-lg focus-visible:ring-yellow-400/50 focus-visible:border-yellow-400 transition-all" 
+                          className="bg-zinc-900/50 border-zinc-800 h-12 text-lg focus-visible:ring-primary/50 focus-visible:border-primary transition-all" 
                           placeholder="Ex: The Neon Studio"
                           autoComplete='off'
                         />
@@ -416,7 +440,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm select-none pointer-events-none z-10">waitlistkit.com/w/</span>
                             <Input 
                               {...form.register('slug')}
-                              className="pl-[140px] bg-zinc-900/50 border-zinc-800 h-12 font-mono text-sm focus-visible:ring-yellow-400/50 group-hover:border-zinc-700 transition-all" 
+                              className="pl-[140px] bg-zinc-900/50 border-zinc-800 h-12 font-mono text-sm focus-visible:ring-primary/50 group-hover:border-zinc-700 transition-all" 
                               placeholder="neon-studio"
                             />
                          </div>
@@ -426,7 +450,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                          <Label className="text-xs font-bold tracking-wider text-zinc-400 uppercase">Pitch / Tagline</Label>
                          <Textarea 
                            {...form.register('description')}
-                           className="bg-zinc-900/50 border-zinc-800 resize-none min-h-[100px] focus-visible:ring-yellow-400/50 focus-visible:border-yellow-400 transition-all" 
+                           className="bg-zinc-900/50 border-zinc-800 resize-none min-h-[100px] focus-visible:ring-primary/50 focus-visible:border-primary transition-all" 
                            placeholder="We are building the future of..."
                          />
                       </div>
@@ -438,7 +462,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                  {step === 3 && (
                   <div className="space-y-6 animate-in slide-in-from-left-4 fade-in duration-300">
                      <div>
-                      <h1 className="text-2xl font-bold">Pick a <span className="text-yellow-400">Vibe.</span></h1>
+                      <h1 className="text-2xl font-bold">Pick a <span className="text-primary">Vibe.</span></h1>
                       <p className="text-zinc-500 text-sm mt-1">How should your waitlist feel?</p>
                     </div>
 
@@ -454,7 +478,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                               className={cn(
                                 "cursor-pointer relative p-4 rounded-xl border transition-all hover:scale-[1.02] group",
                                 isSelected 
-                                  ? "border-yellow-400 bg-yellow-400/5 ring-2 ring-yellow-400/20" 
+                                  ? "border-primary bg-primary/5 ring-2 ring-primary/20" 
                                   : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900"
                               )}
                             >
@@ -514,7 +538,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                                   <HugeiconsIcon 
                                     icon={Check} 
                                     strokeWidth={2} 
-                                    className="w-5 h-5 text-yellow-400 shrink-0" 
+                                    className="w-5 h-5 text-primary shrink-0" 
                                   />
                                 )}
                               </div>
@@ -567,7 +591,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
             {step < 3 ? (
                 <Button 
                   onClick={nextStep}
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-8"
+                  className="bg-primary hover:bg-primary/80 text-primary-foreground font-bold px-8"
                 >
                   Continue <HugeiconsIcon icon={ChevronRight} strokeWidth={2} className="w-4 h-4 ml-2" />
                 </Button>
@@ -575,7 +599,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
                <Button 
                   onClick={form.handleSubmit(onSubmit)}
                   disabled={isSubmitting}
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-8 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-primary hover:bg-primary/80 text-primary-foreground font-bold px-8 shadow-[0_0_20px_rgba(250,204,21,0.3)] hover:shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                >
                  <HugeiconsIcon icon={Rocket} strokeWidth={2} className="w-4 h-4 mr-2" />
                  {isSubmitting ? 'Creating...' : 'Launch Waitlist'}

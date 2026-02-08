@@ -1,6 +1,87 @@
 import { ThemeConfig, ThemeName } from './types'
 
 export const themes: Record<ThemeName, ThemeConfig> = {
+  default: {
+    name: 'default',
+    displayName: 'Default',
+    description: 'Uses your app theme - Matches your brand',
+    colors: {
+      background: 'oklch(0.1505 0.0214 283.53)',
+      foreground: 'oklch(0.95 0.01 283.53)',
+      primary: 'oklch(0.8911 0.1861 103.2)',
+      accent: 'oklch(0.8818 0.1499 200.08)',
+      muted: 'oklch(0.2043 0.0316 283.24)',
+      border: 'oklch(1 0 0 / 10%)',
+      inputBg: 'oklch(0.2043 0.0316 283.24)',
+      inputBorder: 'oklch(1 0 0 / 15%)',
+      buttonBg: 'oklch(0.8911 0.1861 103.2)',
+      buttonText: 'oklch(0.15 0.02 103.2)',
+      buttonHover: 'oklch(0.85 0.18 103.2)',
+      success: 'oklch(0.7 0.15 150)',
+      error: 'oklch(0.704 0.191 22.216)',
+    },
+    typography: {
+      fontFamily: {
+        heading: 'var(--font-geist-sans)',
+        body: 'var(--font-geist-sans)',
+        mono: 'var(--font-geist-mono)',
+      },
+      fontSize: {
+        xs: '0.75rem',
+        sm: '0.875rem',
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem',
+        '5xl': '3rem',
+        '6xl': '3.75rem',
+        '7xl': '4.5rem',
+      },
+      fontWeight: {
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      },
+    },
+    layout: {
+      containerMaxWidth: '1200px',
+      spacing: {
+        tight: '0.5rem',
+        normal: '1rem',
+        loose: '2rem',
+      },
+      borderRadius: {
+        sm: '0.25rem',
+        md: '0.5rem',
+        lg: '0.875rem',
+        xl: '1rem',
+        full: '9999px',
+      },
+    },
+    animations: {
+      transitions: 'all 0.2s ease',
+      duration: {
+        fast: '150ms',
+        normal: '200ms',
+        slow: '300ms',
+      },
+      effects: ['smooth', 'subtle'],
+    },
+    classes: {
+      container: 'font-geist-sans',
+      heading: 'font-geist-sans font-semibold',
+      body: 'font-geist-sans',
+      button: 'rounded-[0.875rem] transition-all font-medium',
+      buttonPrimary: 'rounded-[0.875rem] font-medium',
+      buttonSecondary: 'border rounded-[0.875rem] font-medium',
+      input: 'border rounded-[0.875rem]',
+      card: 'border rounded-[0.875rem]',
+      badge: 'rounded-full font-medium',
+    },
+  },
   linear: {
     name: 'linear',
     displayName: 'Linear',
@@ -330,14 +411,14 @@ export const themes: Record<ThemeName, ThemeConfig> = {
     colors: {
       background: '#ffffff',
       foreground: '#000000',
-      primary: '#ffff00',
-      accent: '#ffff00',
+      primary: '#ffd700', // Amarillo más oscuro para mejor legibilidad
+      accent: '#ffd700', // Amarillo más oscuro para mejor legibilidad
       muted: '#f5f5f5',
       border: '#000000',
       inputBg: '#ffffff',
       inputBorder: '#000000',
       buttonBg: '#000000',
-      buttonText: '#ffff00',
+      buttonText: '#ffd700', // Amarillo más oscuro
       buttonHover: '#333333',
       success: '#00ff00',
       error: '#ff0000',
@@ -362,9 +443,9 @@ export const themes: Record<ThemeName, ThemeConfig> = {
         '7xl': '4.5rem',
       },
       fontWeight: {
-        normal: '400',
+        normal: '700', // Más bold para mejor legibilidad
         medium: '700',
-        semibold: '700',
+        semibold: '800',
         bold: '900',
       },
     },
@@ -395,13 +476,13 @@ export const themes: Record<ThemeName, ThemeConfig> = {
     classes: {
       container: 'bg-white text-black border-4 border-black',
       heading: 'font-space-mono font-black text-black uppercase',
-      body: 'font-space-mono text-black',
-      button: 'bg-black text-yellow-400 hover:bg-gray-900 border-4 border-black uppercase font-bold transition-none',
-      buttonPrimary: 'bg-black text-yellow-400 border-4 border-black uppercase font-bold',
+      body: 'font-space-mono text-black font-bold', // Agregado font-bold para mejor legibilidad
+      button: 'bg-black text-[#ffd700] hover:bg-gray-900 border-4 border-black uppercase font-bold transition-none',
+      buttonPrimary: 'bg-black text-[#ffd700] border-4 border-black uppercase font-bold',
       buttonSecondary: 'bg-white border-4 border-black text-black hover:bg-gray-100 uppercase font-bold',
-      input: 'bg-white border-4 border-black text-black placeholder:text-gray-500 uppercase font-mono',
+      input: 'bg-white border-4 border-black text-black placeholder:text-gray-500 uppercase font-mono font-bold',
       card: 'bg-white border-4 border-black',
-      badge: 'bg-yellow-400 text-black border-2 border-black uppercase font-bold',
+      badge: 'bg-[#ffd700] text-black border-2 border-black uppercase font-bold', // Fondo amarillo con texto negro para mejor contraste
     },
   },
   webflow: {
@@ -489,7 +570,7 @@ export const themes: Record<ThemeName, ThemeConfig> = {
 
 // Helper para obtener un tema
 export function getTheme(themeName: ThemeName): ThemeConfig {
-  return themes[themeName] || themes.linear
+  return themes[themeName] || themes.default
 }
 
 // Helper para obtener todos los temas disponibles

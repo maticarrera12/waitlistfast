@@ -1,4 +1,5 @@
 export type ThemeName = 
+  | 'default'
   | 'linear' 
   | 'stripe' 
   | 'notion' 

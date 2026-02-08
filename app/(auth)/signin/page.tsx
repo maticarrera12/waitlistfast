@@ -56,7 +56,7 @@ export default function SignInPage() {
         queryClient.invalidateQueries({ queryKey: ["session"] });
         toast.success("You have been signed in");
         startTransition(() => {
-          router.push(searchParams.get("callbackUrl") || "/dashboard");
+        router.push(searchParams.get("callbackUrl") || "/dashboard");
         });
       } else {
         setError("An error occurred");

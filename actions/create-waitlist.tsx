@@ -14,12 +14,13 @@ const createWaitlistSchema = z.object({
   name: z.string().min(2),
   slug: z.string().min(3).regex(/^[a-z0-9-]+$/, "Lowercase, numbers and dashes only"),
   description: z.string().optional(),
-  theme: z.enum(['linear', 'stripe', 'notion', 'apple', 'brutalist', 'webflow']).default('linear'),
+  theme: z.enum(['default', 'linear', 'stripe', 'notion', 'apple', 'brutalist', 'webflow']).default('default'),
 })
 
 export type CreateWaitlistState = {
   error?: string
   success?: boolean
+  subdomainUrl?: string
 }
 
 export async function createWaitlist(data: z.infer<typeof createWaitlistSchema>) {
@@ -158,7 +159,19 @@ export async function createWaitlist(data: z.infer<typeof createWaitlistSchema>)
     return { error: "Something went wrong. Please try again." }
   }
 
-  // 6. Revalidar y Redirigir
+  // 6. Revalidar y retornar URL del subdominio para redirect en cliente
   revalidatePath('/dashboard')
-  redirect(`/dashboard/waitlists/${slug}`)
+  
+  // Construir URL del subdominio
+  // En desarrollo, usar localhost (que soporta wildcards nativamente en macOS)
+  // En producción, usar el dominio real
+  const isDev = process.env.NODE_ENV !== 'production'
+  const rootDomain = isDev ? 'localhost' : (process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'waitlistfast.com')
+  const protocol = isDev ? 'http' : 'https'
+  const port = isDev ? ':3000' : ''
+  const subdomainUrl = `${protocol}://${slug}.${rootDomain}${port}`
+  
+  // Retornar la URL para que el cliente haga el redirect
+  // (redirect() de Next.js no puede redirigir a subdominios)
+  return { success: true, subdomainUrl }
 }
