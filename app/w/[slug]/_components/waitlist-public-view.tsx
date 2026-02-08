@@ -3,8 +3,8 @@
 import { cn } from '@/lib/utils'
 import { JoinForm } from '@/components/waitlist/join-form'
 import { useTheme, ThemeName, isValidTheme, getTheme } from '@/lib/themes'
-import type { RewardModel } from '@/lib/generated/prisma/models/Reward'
-import type { PointRuleModel } from '@/lib/generated/prisma/models/PointRule'
+import type { RewardModel } from '@/src/generated/models/Reward'
+import type { PointRuleModel } from '@/src/generated/models/PointRule'
 import { ReferralCookieHandler } from './referral-cookie-handler'
 
 interface WaitlistPublicViewProps {
