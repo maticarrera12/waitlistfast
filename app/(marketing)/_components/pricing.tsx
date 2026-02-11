@@ -37,51 +37,102 @@ interface PricingPlan {
 
 const pricingPlans: PricingPlan[] = [
   {
-    id: 'starter',
-    name: 'STARTER',
+    id: 'free',
+    name: 'FREE',
+    badge: 'Launch fast',
     price: '$0',
     period: '/mo',
     borderColor: 'border-accent',
     accentColor: 'text-accent',
-    badge: undefined,
     features: [
-      { icon: Radar, text: '1 Active Waitlist' },
-      { icon: GroupIcon, text: '500 Subscribers / Mo' },
-      { icon: MentoringIcon, text: 'Standard Analytics' },
+      // Core
+      { icon: CheckCircle, text: 'Unlimited waitlists' },
+      { icon: CheckCircle, text: 'Subdomain hosting (yourproject.waitlistfast.com)' },
+      { icon: CheckCircle, text: '6 prebuilt templates' },
+      { icon: CheckCircle, text: 'Basic customization (logo, headline, colors)' },
+      { icon: CheckCircle, text: 'Email capture' },
+      { icon: CheckCircle, text: 'Basic referral links (referralCode)' },
+
+      // Gamification
+      { icon: Terminal, text: 'No points engine' },
+      { icon: Terminal, text: 'No rewards' },
+      { icon: Terminal, text: 'No leaderboard' },
+
+      // Branding
+      { icon: BotIcon, text: 'WaitlistFast badge (small & elegant)' },
+      { icon: CheckCircle, text: 'Point rules editor' },
+      { icon: CheckCircle, text: 'Reward rules editor' },
+
+      // Analytics
+      { icon: Terminal, text: 'Only total subscribers count' },
     ],
-    buttonText: 'Get Started',
+    buttonText: 'Get started',
   },
+
   {
     id: 'pro',
     name: 'PRO',
-    badge: 'Most Popular',
-    price: '$49',
+    badge: 'Most popular',
+    price: '$19',
     period: '/mo',
     borderColor: 'border-primary',
     accentColor: 'text-primary',
     isPopular: true,
     features: [
-      { icon: CheckCircle, text: 'Unlimited Waitlists' },
-      { icon: CheckCircle, text: 'Custom Domains' },
-      { icon: CheckCircle, text: 'Advanced CRM Integration' },
-      { icon: CheckCircle, text: 'White Label (No Branding)' },
+      // Everything in FREE
+      { icon: CheckCircle, text: 'Everything in FREE' },
+
+      // Viral Growth
+      { icon: Radar, text: 'Referral campaign engine' },
+      { icon: CheckCircle, text: 'Points system (Point Rules)' },
+      { icon: CheckCircle, text: 'Real-time leaderboard' },
+      { icon: ShieldUserIcon, text: 'Anti-fraud protections' },
+      { icon: IdVerifiedIcon, text: 'Email verification rules' },
+
+      // Branding
+      { icon: CheckCircle, text: 'Remove WaitlistFast branding' },
+      { icon: CheckCircle, text: 'Theme variants per template' },
+      { icon: CheckCircle, text: 'Custom CTA copy' },
+
+      // Analytics
+      { icon: CheckCircle, text: 'Referral analytics' },
+
+      // Settings
+      { icon: CheckCircle, text: 'Full campaign configuration' },
+      { icon: CheckCircle, text: 'Enable / disable leaderboard' },
     ],
-    buttonText: 'GET STARTED',
+    buttonText: 'Start Pro',
   },
+
   {
     id: 'business',
     name: 'BUSINESS',
-    price: '$199',
+    badge: 'Scale & brand',
+    price: '$59',
     period: '/mo',
     borderColor: 'border-tertiary',
     accentColor: 'text-tertiary',
     features: [
-      { icon: HutIcon, text: 'Full White-Label Solution' },
-      { icon: ShieldUserIcon, text: 'Dedicated Account Manager' },
-      { icon: SphereIcon, text: 'Premium Support SLA' },
-      { icon: Security, text: 'Audit Logs & SSO' },
+      // Everything in PRO
+      { icon: CheckCircle, text: 'Everything in PRO' },
+
+      // Domains & Brand
+      { icon: SphereIcon, text: 'Custom domain (waitlist.yourcompany.com)' },
+      { icon: SphereIcon, text: 'Multiple domains per waitlist' },
+      { icon: CheckCircle, text: 'Advanced brand settings (fonts, spacing)' },
+
+      // Team & Control
+      { icon: GroupIcon, text: 'Multiple team members' },
+      { icon: MentoringIcon, text: 'Roles (admin / editor / viewer)' },
+      { icon: CheckCircle, text: 'Manual point adjustments' },
+      { icon: CheckCircle, text: 'Manual reward assignment' },
+      { icon: CheckCircle, text: 'CSV export' },
+
+      // Scale & Ops
+      { icon: CheckCircle, text: 'Snapshot leaderboards' },
+      { icon: Terminal, text: 'Read-only API access (MVP)' },
     ],
-    buttonText: 'Contact Sales',
+    buttonText: 'Contact sales',
   },
 ]
 

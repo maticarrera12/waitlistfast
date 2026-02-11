@@ -22,7 +22,7 @@ import { useTheme } from '@/lib/themes'
 
 // --- SCHEMAS ---
 const formSchema = z.object({
-  type: z.string().min(1, "Select a project type"),
+  templateKey: z.enum(['saas-minimal', 'startup-minimal', 'mobile-app']),
   name: z.string().min(2, "Name is required"),
   slug: z.string().min(3, "Slug must be at least 3 chars").regex(/^[a-z0-9-]+$/, "Lowercase, numbers and dashes only"),
   description: z.string().optional(),
@@ -35,14 +35,29 @@ interface CreateWaitlistModalProps {
   trigger?: React.ReactNode;
 }
 
-// --- OPTIONS FOR STEP 1 ---
-const TYPE_OPTIONS = [
-  { id: 'saas', label: 'SaaS Product', icon: Laptop, desc: 'Software for business or consumers' },
-  { id: 'app', label: 'Mobile App', icon: Smartphone, desc: 'iOS or Android app launch' },
-  { id: 'course', label: 'Online Course', icon: GraduationCap, desc: 'Education & Content' },
-  { id: 'ecommerce', label: 'eCommerce', icon: ShoppingBag, desc: 'Physical product drop' },
-  { id: 'game', label: 'Game', icon: Gamepad2, desc: 'Indie or Studio game' },
-  { id: 'other', label: 'Other Project', icon: Rocket, desc: 'Community, Newsletter, etc' },
+// --- TEMPLATE OPTIONS FOR STEP 1 ---
+const TEMPLATE_OPTIONS = [
+  { 
+    id: 'saas-minimal' as const, 
+    label: 'SaaS Validation Waitlist', 
+    icon: Laptop, 
+    desc: 'Problem-solution focused with hero, why join, problem, solution, early access, and CTA',
+    emoji: '📋'
+  },
+  { 
+    id: 'startup-minimal' as const, 
+    label: 'Startup Minimal', 
+    icon: Rocket, 
+    desc: 'Clean and simple with hero, how it works, and CTA',
+    emoji: '✨'
+  },
+  { 
+    id: 'mobile-app' as const, 
+    label: 'Mobile App', 
+    icon: Smartphone, 
+    desc: 'App-focused with hero, preview, and download CTA',
+    emoji: '📱'
+  },
 ]
 
 // Theme options with metadata
@@ -106,11 +121,11 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: '',
+      templateKey: 'saas-minimal' as 'saas-minimal' | 'startup-minimal' | 'mobile-app',
       name: '',
       slug: '',
       description: '',
-      theme: 'default' as ThemeName
+      theme: 'default' as ThemeName,
     },
     mode: 'onChange'
   })
@@ -121,8 +136,9 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
   // Navigation Logic
   const nextStep = async () => {
     let valid = false
-    if (step === 1) valid = await form.trigger('type')
+    if (step === 1) valid = await form.trigger('templateKey')
     if (step === 2) valid = await form.trigger(['name', 'slug', 'description'])
+    if (step === 3) valid = await form.trigger('theme')
     
     if (valid) setStep((s) => s + 1)
   }
@@ -333,7 +349,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
       <DialogContent className="sm:max-w-[900px] bg-zinc-950 text-white border-zinc-800 p-0 overflow-hidden gap-0 rounded-none">
         <DialogHeader className="sr-only">
           <DialogTitle>
-            {step === 1 ? "Choose Project Type" : step === 2 ? "Configure Waitlist Identity" : "Visualize Your Waitlist"}
+            {step === 1 ? "Choose Template" : step === 2 ? "Configure Waitlist Identity" : "Visualize Your Waitlist"}
           </DialogTitle>
         </DialogHeader>
         
@@ -341,7 +357,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
         <div className="p-6 pb-0 border-b border-zinc-800 bg-zinc-950">
            <div className="mb-4">
               <span className="text-zinc-400 text-sm font-medium tracking-wide">
-                 {step === 1 ? "CHOOSE TYPE" : step === 2 ? "CONFIGURE IDENTITY" : "VISUALIZE"}
+                 {step === 1 ? "CHOOSE TEMPLATE" : step === 2 ? "CONFIGURE IDENTITY" : "VISUALIZE"}
               </span>
            </div>
         </div>
@@ -362,51 +378,57 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
           ))}
         </div>
 
-        <div className="flex h-[550px]">
+        <div className="flex h-[600px]">
             {/* LEFT COLUMN: CONTROLS */}
             <div className="w-1/2 p-8 overflow-y-auto scrollbar-hide border-r border-zinc-800/50 bg-zinc-950/50">
                 
-                {/* STEP 1: TYPE SELECTION */}
+                {/* STEP 1: TEMPLATE SELECTION */}
                 {step === 1 && (
                   <div className="space-y-4">
                     <h1 className="text-2xl font-bold mb-1">Let's start with <span className="text-primary">the basics.</span></h1>
-                    <p className="text-zinc-500 text-sm mb-6">What kind of product are you launching today?</p>
+                    <p className="text-zinc-500 text-sm mb-6">Choose a template for your waitlist page.</p>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                      {TYPE_OPTIONS.map((opt) => {
-                        const isAvailable = opt.id === 'saas'
-                        const isSelected = form.watch('type') === opt.id
+                    <div className="grid grid-cols-1 gap-3">
+                      {TEMPLATE_OPTIONS.map((opt) => {
+                        const isSelected = form.watch('templateKey') === opt.id
                         
                         return (
                           <div 
                             key={opt.id}
-                            onClick={() => isAvailable && form.setValue('type', opt.id)}
+                            onClick={() => form.setValue('templateKey', opt.id)}
                             className={cn(
-                              "relative p-4 rounded-xl border transition-all duration-200 group",
-                              isAvailable 
-                                ? "cursor-pointer hover:border-zinc-600 hover:bg-zinc-900" 
-                                : "cursor-not-allowed opacity-50",
-                              isSelected && isAvailable
-                                ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
+                              "relative p-4 rounded-xl border transition-all duration-200 group cursor-pointer hover:border-zinc-600 hover:bg-zinc-900",
+                              isSelected
+                                ? "border-primary bg-primary/5 ring-2 ring-primary/20" 
                                 : "border-zinc-800 bg-zinc-900/50"
                             )}
                           >
-                            {!isAvailable && (
-                              <div className="absolute top-2 right-2 px-2 py-0.5 bg-zinc-800 border border-zinc-700 rounded-full text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
-                                Soon
+                            <div className="flex items-start gap-3">
+                              <div className="h-12 w-12 rounded-lg bg-zinc-800 flex items-center justify-center text-2xl shrink-0">
+                                {opt.emoji}
                               </div>
-                            )}
-                            <HugeiconsIcon 
-                              icon={opt.icon} 
-                              strokeWidth={2} 
-                              className={cn(
-                                "w-6 h-6 mb-3", 
-                                isSelected && isAvailable ? "text-primary" : "text-zinc-500",
-                                isAvailable && "group-hover:text-zinc-300"
-                              )} 
-                            />
-                            <div className="font-semibold text-sm">{opt.label}</div>
-                            <div className="text-xs text-zinc-500 mt-1">{opt.desc}</div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <HugeiconsIcon 
+                                    icon={opt.icon} 
+                                    strokeWidth={2} 
+                                    className={cn(
+                                      "w-5 h-5", 
+                                      isSelected ? "text-primary" : "text-zinc-500"
+                                    )} 
+                                  />
+                                  <div className="font-bold text-sm text-white">{opt.label}</div>
+                                </div>
+                                <div className="text-xs text-zinc-500 mt-0.5">{opt.desc}</div>
+                              </div>
+                              {isSelected && (
+                                <HugeiconsIcon 
+                                  icon={Check} 
+                                  strokeWidth={2} 
+                                  className="w-5 h-5 text-primary shrink-0" 
+                                />
+                              )}
+                            </div>
                           </div>
                         )
                       })}

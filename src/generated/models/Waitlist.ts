@@ -31,6 +31,7 @@ export type WaitlistMinAggregateOutputType = {
   headline: string | null
   description: string | null
   domainStatus: $Enums.DomainStatus | null
+  templateKey: string | null
   organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +44,7 @@ export type WaitlistMaxAggregateOutputType = {
   headline: string | null
   description: string | null
   domainStatus: $Enums.DomainStatus | null
+  templateKey: string | null
   organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -56,7 +58,10 @@ export type WaitlistCountAggregateOutputType = {
   description: number
   domainStatus: number
   domainSettings: number
+  templateKey: number
   settings: number
+  content: number
+  templateConfig: number
   organizationId: number
   createdAt: number
   updatedAt: number
@@ -71,6 +76,7 @@ export type WaitlistMinAggregateInputType = {
   headline?: true
   description?: true
   domainStatus?: true
+  templateKey?: true
   organizationId?: true
   createdAt?: true
   updatedAt?: true
@@ -83,6 +89,7 @@ export type WaitlistMaxAggregateInputType = {
   headline?: true
   description?: true
   domainStatus?: true
+  templateKey?: true
   organizationId?: true
   createdAt?: true
   updatedAt?: true
@@ -96,7 +103,10 @@ export type WaitlistCountAggregateInputType = {
   description?: true
   domainStatus?: true
   domainSettings?: true
+  templateKey?: true
   settings?: true
+  content?: true
+  templateConfig?: true
   organizationId?: true
   createdAt?: true
   updatedAt?: true
@@ -183,7 +193,10 @@ export type WaitlistGroupByOutputType = {
   description: string | null
   domainStatus: $Enums.DomainStatus
   domainSettings: runtime.JsonValue | null
+  templateKey: string
   settings: runtime.JsonValue | null
+  content: runtime.JsonValue | null
+  templateConfig: runtime.JsonValue | null
   organizationId: string
   createdAt: Date
   updatedAt: Date
@@ -218,7 +231,10 @@ export type WaitlistWhereInput = {
   description?: Prisma.StringNullableFilter<"Waitlist"> | string | null
   domainStatus?: Prisma.EnumDomainStatusFilter<"Waitlist"> | $Enums.DomainStatus
   domainSettings?: Prisma.JsonNullableFilter<"Waitlist">
+  templateKey?: Prisma.StringFilter<"Waitlist"> | string
   settings?: Prisma.JsonNullableFilter<"Waitlist">
+  content?: Prisma.JsonNullableFilter<"Waitlist">
+  templateConfig?: Prisma.JsonNullableFilter<"Waitlist">
   organizationId?: Prisma.StringFilter<"Waitlist"> | string
   createdAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
@@ -239,7 +255,10 @@ export type WaitlistOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   domainStatus?: Prisma.SortOrder
   domainSettings?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateKey?: Prisma.SortOrder
   settings?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateConfig?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -263,7 +282,10 @@ export type WaitlistWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Waitlist"> | string | null
   domainStatus?: Prisma.EnumDomainStatusFilter<"Waitlist"> | $Enums.DomainStatus
   domainSettings?: Prisma.JsonNullableFilter<"Waitlist">
+  templateKey?: Prisma.StringFilter<"Waitlist"> | string
   settings?: Prisma.JsonNullableFilter<"Waitlist">
+  content?: Prisma.JsonNullableFilter<"Waitlist">
+  templateConfig?: Prisma.JsonNullableFilter<"Waitlist">
   organizationId?: Prisma.StringFilter<"Waitlist"> | string
   createdAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
@@ -284,7 +306,10 @@ export type WaitlistOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   domainStatus?: Prisma.SortOrder
   domainSettings?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateKey?: Prisma.SortOrder
   settings?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateConfig?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -304,7 +329,10 @@ export type WaitlistScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Waitlist"> | string | null
   domainStatus?: Prisma.EnumDomainStatusWithAggregatesFilter<"Waitlist"> | $Enums.DomainStatus
   domainSettings?: Prisma.JsonNullableWithAggregatesFilter<"Waitlist">
+  templateKey?: Prisma.StringWithAggregatesFilter<"Waitlist"> | string
   settings?: Prisma.JsonNullableWithAggregatesFilter<"Waitlist">
+  content?: Prisma.JsonNullableWithAggregatesFilter<"Waitlist">
+  templateConfig?: Prisma.JsonNullableWithAggregatesFilter<"Waitlist">
   organizationId?: Prisma.StringWithAggregatesFilter<"Waitlist"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Waitlist"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Waitlist"> | Date | string
@@ -318,7 +346,10 @@ export type WaitlistCreateInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -338,7 +369,10 @@ export type WaitlistUncheckedCreateInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -358,7 +392,10 @@ export type WaitlistUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -378,7 +415,10 @@ export type WaitlistUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,7 +438,10 @@ export type WaitlistCreateManyInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -412,7 +455,10 @@ export type WaitlistUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -425,7 +471,10 @@ export type WaitlistUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -449,7 +498,10 @@ export type WaitlistCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   domainStatus?: Prisma.SortOrder
   domainSettings?: Prisma.SortOrder
+  templateKey?: Prisma.SortOrder
   settings?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  templateConfig?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -462,6 +514,7 @@ export type WaitlistMaxOrderByAggregateInput = {
   headline?: Prisma.SortOrder
   description?: Prisma.SortOrder
   domainStatus?: Prisma.SortOrder
+  templateKey?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -474,6 +527,7 @@ export type WaitlistMinOrderByAggregateInput = {
   headline?: Prisma.SortOrder
   description?: Prisma.SortOrder
   domainStatus?: Prisma.SortOrder
+  templateKey?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -622,7 +676,10 @@ export type WaitlistCreateWithoutOrganizationInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   subscribers?: Prisma.SubscriberCreateNestedManyWithoutWaitlistInput
@@ -641,7 +698,10 @@ export type WaitlistUncheckedCreateWithoutOrganizationInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   subscribers?: Prisma.SubscriberUncheckedCreateNestedManyWithoutWaitlistInput
@@ -689,7 +749,10 @@ export type WaitlistScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Waitlist"> | string | null
   domainStatus?: Prisma.EnumDomainStatusFilter<"Waitlist"> | $Enums.DomainStatus
   domainSettings?: Prisma.JsonNullableFilter<"Waitlist">
+  templateKey?: Prisma.StringFilter<"Waitlist"> | string
   settings?: Prisma.JsonNullableFilter<"Waitlist">
+  content?: Prisma.JsonNullableFilter<"Waitlist">
+  templateConfig?: Prisma.JsonNullableFilter<"Waitlist">
   organizationId?: Prisma.StringFilter<"Waitlist"> | string
   createdAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Waitlist"> | Date | string
@@ -703,7 +766,10 @@ export type WaitlistCreateWithoutSubscribersInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -722,7 +788,10 @@ export type WaitlistUncheckedCreateWithoutSubscribersInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -757,7 +826,10 @@ export type WaitlistUpdateWithoutSubscribersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -776,7 +848,10 @@ export type WaitlistUncheckedUpdateWithoutSubscribersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -795,7 +870,10 @@ export type WaitlistCreateWithoutReferralsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -814,7 +892,10 @@ export type WaitlistUncheckedCreateWithoutReferralsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -849,7 +930,10 @@ export type WaitlistUpdateWithoutReferralsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -868,7 +952,10 @@ export type WaitlistUncheckedUpdateWithoutReferralsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -887,7 +974,10 @@ export type WaitlistCreateWithoutRankingSnapshotsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -906,7 +996,10 @@ export type WaitlistUncheckedCreateWithoutRankingSnapshotsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -941,7 +1034,10 @@ export type WaitlistUpdateWithoutRankingSnapshotsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -960,7 +1056,10 @@ export type WaitlistUncheckedUpdateWithoutRankingSnapshotsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -979,7 +1078,10 @@ export type WaitlistCreateWithoutRewardRulesInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -998,7 +1100,10 @@ export type WaitlistUncheckedCreateWithoutRewardRulesInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1033,7 +1138,10 @@ export type WaitlistUpdateWithoutRewardRulesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -1052,7 +1160,10 @@ export type WaitlistUncheckedUpdateWithoutRewardRulesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1071,7 +1182,10 @@ export type WaitlistCreateWithoutReferralCampaignsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -1090,7 +1204,10 @@ export type WaitlistUncheckedCreateWithoutReferralCampaignsInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1125,7 +1242,10 @@ export type WaitlistUpdateWithoutReferralCampaignsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -1144,7 +1264,10 @@ export type WaitlistUncheckedUpdateWithoutReferralCampaignsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1163,7 +1286,10 @@ export type WaitlistCreateWithoutPointRulesInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutWaitlistsInput
@@ -1182,7 +1308,10 @@ export type WaitlistUncheckedCreateWithoutPointRulesInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1217,7 +1346,10 @@ export type WaitlistUpdateWithoutPointRulesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutWaitlistsNestedInput
@@ -1236,7 +1368,10 @@ export type WaitlistUncheckedUpdateWithoutPointRulesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1255,7 +1390,10 @@ export type WaitlistCreateManyOrganizationInput = {
   description?: string | null
   domainStatus?: $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1268,7 +1406,10 @@ export type WaitlistUpdateWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscribers?: Prisma.SubscriberUpdateManyWithoutWaitlistNestedInput
@@ -1287,7 +1428,10 @@ export type WaitlistUncheckedUpdateWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscribers?: Prisma.SubscriberUncheckedUpdateManyWithoutWaitlistNestedInput
@@ -1306,7 +1450,10 @@ export type WaitlistUncheckedUpdateManyWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domainStatus?: Prisma.EnumDomainStatusFieldUpdateOperationsInput | $Enums.DomainStatus
   domainSettings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  templateConfig?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1395,7 +1542,10 @@ export type WaitlistSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   description?: boolean
   domainStatus?: boolean
   domainSettings?: boolean
+  templateKey?: boolean
   settings?: boolean
+  content?: boolean
+  templateConfig?: boolean
   organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1417,7 +1567,10 @@ export type WaitlistSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   description?: boolean
   domainStatus?: boolean
   domainSettings?: boolean
+  templateKey?: boolean
   settings?: boolean
+  content?: boolean
+  templateConfig?: boolean
   organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1432,7 +1585,10 @@ export type WaitlistSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   description?: boolean
   domainStatus?: boolean
   domainSettings?: boolean
+  templateKey?: boolean
   settings?: boolean
+  content?: boolean
+  templateConfig?: boolean
   organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1447,13 +1603,16 @@ export type WaitlistSelectScalar = {
   description?: boolean
   domainStatus?: boolean
   domainSettings?: boolean
+  templateKey?: boolean
   settings?: boolean
+  content?: boolean
+  templateConfig?: boolean
   organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WaitlistOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "headline" | "description" | "domainStatus" | "domainSettings" | "settings" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["waitlist"]>
+export type WaitlistOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "headline" | "description" | "domainStatus" | "domainSettings" | "templateKey" | "settings" | "content" | "templateConfig" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["waitlist"]>
 export type WaitlistInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   subscribers?: boolean | Prisma.Waitlist$subscribersArgs<ExtArgs>
@@ -1490,7 +1649,10 @@ export type $WaitlistPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     description: string | null
     domainStatus: $Enums.DomainStatus
     domainSettings: runtime.JsonValue | null
+    templateKey: string
     settings: runtime.JsonValue | null
+    content: runtime.JsonValue | null
+    templateConfig: runtime.JsonValue | null
     organizationId: string
     createdAt: Date
     updatedAt: Date
@@ -1931,7 +2093,10 @@ export interface WaitlistFieldRefs {
   readonly description: Prisma.FieldRef<"Waitlist", 'String'>
   readonly domainStatus: Prisma.FieldRef<"Waitlist", 'DomainStatus'>
   readonly domainSettings: Prisma.FieldRef<"Waitlist", 'Json'>
+  readonly templateKey: Prisma.FieldRef<"Waitlist", 'String'>
   readonly settings: Prisma.FieldRef<"Waitlist", 'Json'>
+  readonly content: Prisma.FieldRef<"Waitlist", 'Json'>
+  readonly templateConfig: Prisma.FieldRef<"Waitlist", 'Json'>
   readonly organizationId: Prisma.FieldRef<"Waitlist", 'String'>
   readonly createdAt: Prisma.FieldRef<"Waitlist", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Waitlist", 'DateTime'>

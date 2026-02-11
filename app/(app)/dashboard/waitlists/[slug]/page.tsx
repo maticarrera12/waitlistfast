@@ -16,6 +16,7 @@ import {
   Share06Icon, 
   Link01Icon 
 } from "@hugeicons/core-free-icons"
+import { getPublicWaitlistUrl } from "@/lib/waitlist/get-public-url"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -84,7 +85,7 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
     : "0"
 
   // URL pública
-  const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/w/${waitlist.slug}`
+  const publicUrl = getPublicWaitlistUrl(waitlist.slug)
 
   return (
     <div className="space-y-8 p-2 md:p-8 max-w-7xl mx-auto w-full min-w-0">
@@ -97,6 +98,11 @@ export default async function WaitlistAnalyticsPage({ params }: PageProps) {
             </a>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
+            <Button variant="outline" asChild className="flex-1 md:flex-initial">
+                <Link href={`/dashboard/waitlists/${slug}/settings/content`}>
+                    Content
+                </Link>
+            </Button>
             <Button variant="outline" asChild className="flex-1 md:flex-initial">
                 <Link href={`/dashboard/waitlists/${slug}/settings/referral`}>
                     Settings

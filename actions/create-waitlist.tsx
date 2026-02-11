@@ -10,7 +10,7 @@ import { getTheme } from '@/lib/themes'
 
 // El mismo Schema del frontend para validación doble seguridad
 const createWaitlistSchema = z.object({
-  type: z.string().min(1),
+  templateKey: z.enum(['saas-minimal', 'startup-minimal', 'mobile-app']),
   name: z.string().min(2),
   slug: z.string().min(3).regex(/^[a-z0-9-]+$/, "Lowercase, numbers and dashes only"),
   description: z.string().optional(),
@@ -96,9 +96,9 @@ export async function createWaitlist(data: z.infer<typeof createWaitlistSchema>)
     return { error: `Invalid fields: ${validatedFields.error.errors.map(e => e.message).join(", ")}` }
   }
 
-  const { name, slug, description, theme, type } = validatedFields.data
+  const { name, slug, description, theme, templateKey } = validatedFields.data
 
-  console.log("Creating waitlist with:", { name, slug, description, theme, type, orgId })
+  console.log("Creating waitlist with:", { name, slug, description, theme, templateKey, orgId })
 
   try {
     // 4. Crear en Base de Datos
@@ -122,10 +122,10 @@ export async function createWaitlist(data: z.infer<typeof createWaitlistSchema>)
         slug,
         description: description || null,
         organizationId: orgId,
-        // Guardamos 'theme' y 'type' dentro del JSON settings
+        templateKey: templateKey, // Guardar templateKey en el campo dedicado
+        // Guardamos 'theme' dentro del JSON settings
         settings: {
           theme,
-          projectType: type,
           // Get brand color from theme config
           brandColor: (() => {
             try {

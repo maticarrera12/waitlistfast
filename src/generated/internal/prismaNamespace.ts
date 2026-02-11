@@ -2007,7 +2007,10 @@ export const WaitlistScalarFieldEnum = {
   description: 'description',
   domainStatus: 'domainStatus',
   domainSettings: 'domainSettings',
+  templateKey: 'templateKey',
   settings: 'settings',
+  content: 'content',
+  templateConfig: 'templateConfig',
   organizationId: 'organizationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

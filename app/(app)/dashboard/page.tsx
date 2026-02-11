@@ -8,6 +8,7 @@ import { CreateWaitlistModal } from '../_components/create-waitlist-modal'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { getPublicWaitlistUrl } from '@/lib/waitlist/get-public-url'
 
 async function getDashboardData() {
   const session = await auth.api.getSession({
@@ -166,7 +167,7 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {waitlists.map((waitlist) => {
               const waitTime = calculateWaitTime(waitlist.createdAt)
-              const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/w/${waitlist.slug}`
+              const publicUrl = getPublicWaitlistUrl(waitlist.slug)
               
               return (
                 <Card key={waitlist.id} className="overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all group">
