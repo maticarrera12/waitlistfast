@@ -200,7 +200,6 @@ export function PointRulesSection({ waitlistId, waitlistSlug, rules: initialRule
                 <TableHead className="w-[60px]">Priority</TableHead>
                 <TableHead>Event</TableHead>
                 <TableHead>Points</TableHead>
-                <TableHead>Condition</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead className="w-[80px]">Active</TableHead>
                 <TableHead className="w-[120px]">Actions</TableHead>
@@ -237,9 +236,6 @@ export function PointRulesSection({ waitlistId, waitlistSlug, rules: initialRule
                   <TableCell className="font-mono font-semibold">
                     {rule.points > 0 ? '+' : ''}
                     {rule.points}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {formatCondition(rule.conditions)}
                   </TableCell>
                   <TableCell>{rule.name || '-'}</TableCell>
                   <TableCell>

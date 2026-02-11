@@ -1,12 +1,11 @@
 "use client";
 
 import {
-  Configuration01Icon,
+  // Configuration01Icon,
   DashboardSquare02Icon,
-  AnalyticsUpIcon,
-  LeftToRightListBulletIcon
+  // AnalyticsUpIcon,
+  // LeftToRightListBulletIcon
 } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 import AppSidebar, { SidebarSection } from "@/components/ui/app-sidebar";
 import { useSessionQuery } from "@/hooks/useSessionQuery";
@@ -23,29 +22,30 @@ export default function AppMainSidebar() {
           href: "/dashboard",
           icon: DashboardSquare02Icon,
         },
-        {
-          name: "WAITLISTS",
-          href: "/dashboard/waitlists",
-          icon: LeftToRightListBulletIcon,
-        },
-        {
-          name: "ANALYTICS",
-          href: "/dashboard/analytics",
-          icon: AnalyticsUpIcon,
-        },
-      ],
+    //     {
+    //       name: "WAITLISTS",
+    //       href: "/dashboard/waitlists",
+    //       icon: LeftToRightListBulletIcon,
+    //     },
+    //     {
+    //       name: "ANALYTICS",
+    //       href: "/dashboard/analytics",
+    //       icon: AnalyticsUpIcon,
+    //     },
+    //   ],
+    // },
+    // {
+    //   label: "Account",
+    //   items: [
+    //     {
+    //       name: "SETTINGS",
+    //       href: "/settings/account/profile",
+    //       icon: Configuration01Icon,
+    //       matchPrefixes: ["/app/settings"],
+    //     },
+     ],
     },
-    {
-      label: "Account",
-      items: [
-        {
-          name: "SETTINGS",
-          href: "/settings/account/profile",
-          icon: Configuration01Icon,
-          matchPrefixes: ["/app/settings"],
-        },
-      ],
-    },
+
   ];
 
   return (

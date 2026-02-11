@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { useTheme, getTheme, ThemeName } from '@/lib/themes'
 import { JoinForm } from '@/components/waitlist/join-form'
@@ -20,17 +20,31 @@ interface MobileAppHeroProps {
   platforms: MobileAppPlatformConfig
 }
 
+const SLIDE_INTERVAL = 5000 // 5 seconds per slide
+
 export function MobileAppHero({ waitlist, subscriberCount, themeName, config, platforms }: MobileAppHeroProps) {
   const theme = useTheme(themeName)
   const themeConfig = getTheme(themeName)
 
   const headline = config.headline || waitlist.headline || waitlist.name
   const images = config.media.images || []
-  const bgImage = images[0] || ''
+
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const nextSlide = useCallback(() => {
+    if (images.length <= 1) return
+    setActiveIndex((prev) => (prev + 1) % images.length)
+  }, [images.length])
+
+  useEffect(() => {
+    if (images.length <= 1) return
+    const timer = setInterval(nextSlide, SLIDE_INTERVAL)
+    return () => clearInterval(timer)
+  }, [nextSlide, images.length])
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 pb-32">
-      {/* Background image */}
+      {/* Background — video or image slider */}
       {config.type === 'video' && config.media.videoUrl ? (
         <div className="absolute inset-0 z-0">
           <video
@@ -48,14 +62,19 @@ export function MobileAppHero({ waitlist, subscriberCount, themeName, config, pl
             }}
           />
         </div>
-      ) : bgImage ? (
+      ) : images.length > 0 ? (
         <div className="absolute inset-0 z-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={bgImage}
-            alt="App Preview"
-            className="w-full h-full object-cover opacity-40 grayscale"
-          />
+          {/* Stacked images — crossfade slider */}
+          {images.map((src, idx) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={idx}
+              src={src}
+              alt={`App Preview ${idx + 1}`}
+              className="absolute inset-0 w-full h-full object-cover grayscale transition-opacity duration-1000 ease-in-out"
+              style={{ opacity: idx === activeIndex ? 0.4 : 0 }}
+            />
+          ))}
           <div
             className="absolute inset-0"
             style={{
@@ -126,6 +145,25 @@ export function MobileAppHero({ waitlist, subscriberCount, themeName, config, pl
                   <span>🤖</span> Android
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Slide indicators */}
+          {images.length > 1 && config.type !== 'video' && (
+            <div className="flex justify-center gap-2 mt-6">
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveIndex(idx)}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: idx === activeIndex
+                      ? theme.colors.primary
+                      : `${theme.colors.foreground}30`,
+                    transform: idx === activeIndex ? 'scale(1.5)' : 'scale(1)',
+                  }}
+                />
+              ))}
             </div>
           )}
         </div>

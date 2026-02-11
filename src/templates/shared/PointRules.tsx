@@ -76,35 +76,10 @@ export function PointRules({ pointRules, themeName }: PointRulesProps) {
               >
                 Name
               </th>
-              <th 
-                className={cn(
-                  "text-left py-4 px-6 uppercase tracking-widest font-bold text-xs",
-                  theme.classes.body
-                )}
-                style={{ opacity: 0.6 }}
-              >
-                Condition
-              </th>
             </tr>
           </thead>
           <tbody>
-            {pointRules.map((rule) => {
-              const conditions = rule.conditions as any || {}
-              let conditionText = 'None'
-              
-              if (conditions.onlyFirst) {
-                conditionText = 'First time only'
-              } else if (conditions.maxOccurrences) {
-                conditionText = `Max ${conditions.maxOccurrences} times`
-              } else if (conditions.referralCount) {
-                conditionText = `Exactly ${conditions.referralCount} referrals`
-              } else if (conditions.minReferralCount) {
-                conditionText = `At least ${conditions.minReferralCount} referrals`
-              } else if (conditions.once) {
-                conditionText = 'Once'
-              }
-
-              return (
+            {pointRules.map((rule) => (
                 <tr 
                   key={rule.id}
                   className="border-b"
@@ -153,17 +128,8 @@ export function PointRules({ pointRules, themeName }: PointRulesProps) {
                       {rule.name || rule.event.replace('_', ' ')}
                     </span>
                   </td>
-                  <td className="py-4 px-6">
-                    <span 
-                      className={cn(theme.classes.body)}
-                      style={{ opacity: 0.6 }}
-                    >
-                      {conditionText}
-                    </span>
-                  </td>
                 </tr>
-              )
-            })}
+              ))}
           </tbody>
         </table>
       </div>

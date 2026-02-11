@@ -22,7 +22,7 @@ import { useTheme } from '@/lib/themes'
 
 // --- SCHEMAS ---
 const formSchema = z.object({
-  templateKey: z.enum(['saas-minimal', 'startup-minimal', 'mobile-app']),
+  templateKey: z.enum(['saas-minimal', 'mobile-app']),
   name: z.string().min(2, "Name is required"),
   slug: z.string().min(3, "Slug must be at least 3 chars").regex(/^[a-z0-9-]+$/, "Lowercase, numbers and dashes only"),
   description: z.string().optional(),
@@ -43,13 +43,6 @@ const TEMPLATE_OPTIONS = [
     icon: Laptop, 
     desc: 'Problem-solution focused with hero, why join, problem, solution, early access, and CTA',
     emoji: '📋'
-  },
-  { 
-    id: 'startup-minimal' as const, 
-    label: 'Startup Minimal', 
-    icon: Rocket, 
-    desc: 'Clean and simple with hero, how it works, and CTA',
-    emoji: '✨'
   },
   { 
     id: 'mobile-app' as const, 
@@ -121,7 +114,7 @@ export function CreateWaitlistModal({ trigger }: CreateWaitlistModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      templateKey: 'saas-minimal' as 'saas-minimal' | 'startup-minimal' | 'mobile-app',
+      templateKey: 'saas-minimal' as 'saas-minimal' | 'mobile-app',
       name: '',
       slug: '',
       description: '',
