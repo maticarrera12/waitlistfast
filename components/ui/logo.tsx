@@ -13,7 +13,7 @@ const Logo: React.FC<LogoProps> = ({ className }: LogoProps) => {
     <div className={cn("relative", className, isRounded && "overflow-hidden")}>
       <Image
         src="/logo/logo.png"
-        alt="Boundary Logo"
+        alt="WaitlistFast Logo"
         fill
         priority
         className={cn("w-full h-full", isRounded ? "object-cover" : "object-contain")}

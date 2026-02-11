@@ -77,15 +77,15 @@ export default function SignUpPage() {
 
   return (
     <AuthShell
-      title="Welcome back! Please sign in to your Boundary account"
+      title="Welcome back! Please sign in to your WaitlistFast account"
       subtitle="Thank you for registering!"
       cardTitle="Please enter your login details"
-      cardSubtitle="Stay connected with Boundary. Subscribe now for the latest updates and news."
+      cardSubtitle="Stay connected with WaitlistFast. Subscribe now for the latest updates and news."
     >
       <div className=" flex items-center justify-center bg-background px-4">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h1 className="text-3xl font-bold text-primary">Welcome! Please sign up to your Boundary account</h1>
+            <h1 className="text-3xl font-bold text-primary">Welcome! Please sign up to your WaitlistFast account</h1>
             <p className="mt-2 text-sm text-muted-foreground">Thank you for registering!</p>
           </div>
 
